@@ -2,25 +2,26 @@ package server;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.ArrayList;
 
-public class ClientHandler implements Runnable {
-    public static ArrayList<ClientHandler> Clients = new ArrayList<>();
+import static server.Server.Broadcast;
+import static server.Server.ConnectedClients;
 
+public class ClientConnection implements Runnable {
+
+    public BufferedWriter bufferedWriter; // Used to write to the client
+    public BufferedReader bufferedReader; // Used to read data from the client
     private Socket socket;
-    private BufferedWriter bufferedWriter; // Used to write to the client
-    private BufferedReader bufferedReader; // Used to read data from the client
 
-    public ClientHandler(Socket socket) {
+    public ClientConnection(Socket socket) {
         try {
             this.socket = socket;
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-            Clients.add(this);
+            ConnectedClients.add(this);
             Broadcast("The server is broadcasting a message to the clients...");
         } catch (IOException e) {
-            Close(socket, bufferedWriter, bufferedReader);
+            Close();
         }
     }
 
@@ -33,27 +34,14 @@ public class ClientHandler implements Runnable {
                 incomingMessageFromClient = bufferedReader.readLine();
                 Broadcast(incomingMessageFromClient);
             } catch (IOException e) {
-                Close(socket, bufferedWriter, bufferedReader);
+                Close();
                 break;
             }
         }
     }
 
-    // Sends a message to every connected client.
-    private void Broadcast(String message) {
-        Clients.forEach((client -> {
-            try {
-                client.bufferedWriter.write(message);
-                client.bufferedWriter.newLine();
-                client.bufferedWriter.flush();
-            } catch (IOException e) {
-                Close(socket, bufferedWriter, bufferedReader);
-            }
-        }));
-    }
-
-    private void Close(Socket socket, BufferedWriter bufferedWriter, BufferedReader bufferedReader) {
-        Clients.remove(this);
+    public void Close() {
+        ConnectedClients.remove(this);
         try {
             if (bufferedWriter != null) {
                 bufferedWriter.close();

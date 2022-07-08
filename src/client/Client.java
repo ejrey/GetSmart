@@ -41,12 +41,12 @@ public class Client implements Runnable  {
 
     @Override
     public void run() {
-        String incomingMessageFromClient;
+        String incomingMessageFromServer;
 
         while (socket.isConnected()) {
             try {
-                incomingMessageFromClient = bufferedReader.readLine();
-                System.out.println(incomingMessageFromClient);
+                incomingMessageFromServer = bufferedReader.readLine();
+                System.out.println(incomingMessageFromServer);
             } catch (IOException e) {
                 Close(socket, bufferedWriter, bufferedReader);
             }

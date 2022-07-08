@@ -2,8 +2,12 @@ package server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.ArrayList;
 
 public class Server {
+
+    public static ArrayList<ClientConnection> ConnectedClients = new ArrayList<>();
+
     private final ServerSocket serverSocket;
 
     public Server(ServerSocket serverSocket) {
@@ -20,15 +24,28 @@ public class Server {
         try {
             while (!serverSocket.isClosed()) {
                 var socket = serverSocket.accept();
-                var clientHandler = new ClientHandler(socket);
+                var clientConnection = new ClientConnection(socket);
                 System.out.println("Client has connected.");
 
-                var thread = new Thread(clientHandler);
+                var thread = new Thread(clientConnection);
                 thread.start();
             }
         } catch (IOException e) {
             Close();
         }
+    }
+
+    // Sends a message to every connected client.
+    public static void Broadcast(String message) {
+        ConnectedClients.forEach((client -> {
+            try {
+                client.bufferedWriter.write(message);
+                client.bufferedWriter.newLine();
+                client.bufferedWriter.flush();
+            } catch (IOException e) {
+                client.Close();
+            }
+        }));
     }
 
     private void Close() {

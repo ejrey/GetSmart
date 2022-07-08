@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class App {
+
+    // TODO: We might need to pass the connecting client socket here, or maybe have a connection button in the app itself?
     public App() {
         JFrame frame = new JFrame();
         JPanel panel = new JPanel();
