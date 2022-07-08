@@ -2,7 +2,6 @@ package server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.Socket;
 
 public class Server {
     private final ServerSocket serverSocket;
@@ -12,19 +11,19 @@ public class Server {
     }
 
     public static void main(String[] args) throws IOException {
-        ServerSocket serverSocket = new ServerSocket(5000); // Might want to pass in port as command arg
-        Server server = new Server(serverSocket);
+        var serverSocket = new ServerSocket(5000); // Might want to pass in port as command arg
+        var server = new Server(serverSocket);
         server.Start();
     }
 
     public void Start() {
         try {
             while (!serverSocket.isClosed()) {
-                Socket socket = serverSocket.accept();
-                ClientHandler clientHandler = new ClientHandler(socket);
+                var socket = serverSocket.accept();
+                var clientHandler = new ClientHandler(socket);
                 System.out.println("Client has connected.");
 
-                Thread thread = new Thread(clientHandler);
+                var thread = new Thread(clientHandler);
                 thread.start();
             }
         } catch (IOException e) {

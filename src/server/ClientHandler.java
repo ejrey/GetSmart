@@ -4,7 +4,6 @@ import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 
-// Implements runnable in order to use Java threads ( @Override run() )
 public class ClientHandler implements Runnable {
     public static ArrayList<ClientHandler> Clients = new ArrayList<>();
 

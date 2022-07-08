@@ -3,7 +3,7 @@ package client;
 import java.io.*;
 import java.net.Socket;
 
-public class Client {
+public class Client implements Runnable  {
     private Socket socket;
     private BufferedWriter bufferedWriter; // Used to write to the server
     private BufferedReader bufferedReader; // Used to read from the server
@@ -19,10 +19,12 @@ public class Client {
     }
 
     public static void main(String[] args) throws IOException {
-        Socket socket = new Socket("localhost", 5000);
-        Client client = new Client(socket);
-        client.ListenForServerMessages();
+        var socket = new Socket("localhost", 5000);
+        var client = new Client(socket);
         client.SendMessageToServer("A client sends a message to the server...");
+
+        var thread = new Thread(client);
+        thread.start();
 
         new App();
     }
@@ -37,20 +39,18 @@ public class Client {
         }
     }
 
-    // TODO: We may need to implement the Runnable interface like we did for Server.java
-    public void ListenForServerMessages() {
-        new Thread(() -> {
-            String messageFromServer;
+    @Override
+    public void run() {
+        String incomingMessageFromClient;
 
-            while (socket.isConnected()) {
-                try {
-                    messageFromServer = bufferedReader.readLine();
-                    System.out.println(messageFromServer);
-                } catch (IOException e) {
-                    Close(socket, bufferedWriter, bufferedReader);
-                }
+        while (socket.isConnected()) {
+            try {
+                incomingMessageFromClient = bufferedReader.readLine();
+                System.out.println(incomingMessageFromClient);
+            } catch (IOException e) {
+                Close(socket, bufferedWriter, bufferedReader);
             }
-        }).start();
+        }
     }
 
     private void Close(Socket socket, BufferedWriter bufferedWriter, BufferedReader bufferedReader) {
