@@ -10,7 +10,7 @@ public class Message {
     private static final String delimiter = ":";
 
     public static String Encode(Action action, String message) {
-        return action.toString().concat(delimiter).concat(message);
+        return action.toString().concat(delimiter).concat(message).concat("\n");
     }
 
     public static Message Decode(String encoded) {
