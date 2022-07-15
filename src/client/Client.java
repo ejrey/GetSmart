@@ -19,7 +19,7 @@ public class Client implements Runnable  {
     }
 
     public static void main(String[] args) throws IOException {
-        var socket = new Socket("localhost", 5000);
+        var socket = new Socket("localhost", 3000);
         var client = new Client(socket);
         client.SendMessageToServer("A client sends a message to the server...");
 

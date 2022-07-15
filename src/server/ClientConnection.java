@@ -8,6 +8,7 @@ import static server.Server.ConnectedClients;
 
 public class ClientConnection implements Runnable {
 
+    // Talk from Server to a client.
     public BufferedWriter bufferedWriter; // Used to write to the client
     public BufferedReader bufferedReader; // Used to read data from the client
     private Socket socket;
@@ -25,6 +26,7 @@ public class ClientConnection implements Runnable {
         }
     }
 
+    // Loop to get message from Client that is running on a thread.
     @Override
     public void run() {
         String incomingMessageFromClient;

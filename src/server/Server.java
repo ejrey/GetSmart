@@ -15,7 +15,7 @@ public class Server {
     }
 
     public static void main(String[] args) throws IOException {
-        var serverSocket = new ServerSocket(5000); // Might want to pass in port as command arg
+        var serverSocket = new ServerSocket(3000); // Might want to pass in port as command arg
         var server = new Server(serverSocket);
         server.Start();
     }
