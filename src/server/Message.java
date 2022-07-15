@@ -3,7 +3,6 @@ package server;
 public class Message {
     public enum Action {
         SET_USERNAME,
-        NONE
     }
 
     public Action action;
