@@ -8,7 +8,7 @@ public class App {
     // TODO: We might need to pass the connecting client socket here, or maybe have a connection button in the app itself?
     public App() {
 
-        // Main Frame with Ttile Screen
+        // Main Frame with Title Screen
         JFrame titleScreen = new JFrame();
         titleScreen.setSize(400, 300);
 
