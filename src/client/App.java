@@ -7,16 +7,46 @@ public class App {
 
     // TODO: We might need to pass the connecting client socket here, or maybe have a connection button in the app itself?
     public App() {
-        JFrame frame = new JFrame();
-        JPanel panel = new JPanel();
 
-        panel.setBorder(BorderFactory.createEmptyBorder(100, 100, 100, 100));
-        panel.setLayout(new GridLayout(0, 1));
+        // Main Frame with Title Screen
+        JFrame titleScreen = new JFrame();
+        titleScreen.setSize(400, 300);
 
-        frame.add(panel, BorderLayout.CENTER);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // TODO: We should probably close the connecting client.
-        frame.setTitle("GetSmart");
-        frame.pack();
-        frame.setVisible(true);
+        // Top Section containing the title
+        JPanel topPanel = new JPanel();
+        titleScreen.add(topPanel, BorderLayout.NORTH);
+        topPanel.setBorder(BorderFactory.createEmptyBorder(50, 50, 25, 50));
+        JLabel title = new JLabel("GetSmart");
+        title.setFont(new Font("Verdana", Font.PLAIN, 30));
+        topPanel.add(title);
+
+
+        // Mid-Section with Username Selection
+        JPanel midPanel = new JPanel();
+        titleScreen.add(midPanel, BorderLayout.CENTER);
+        midPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+        //panel.setLayout(new GridLayout(0, 1));
+        //midPanel.setLayout(new BoxLayout(midPanel, BoxLayout.X_AXIS));
+        JLabel nameLabel = new JLabel("Enter a username:    ");
+        JTextField nameTextField = new JTextField();
+        midPanel.add(nameLabel);
+        midPanel.add(nameTextField);
+        midPanel.setLayout(new BoxLayout(midPanel, BoxLayout.X_AXIS));
+        nameTextField.setMaximumSize(new Dimension(250, 25));
+
+
+        // Bot-Section with start button
+        JPanel botPanel = new JPanel();
+        titleScreen.add(botPanel, BorderLayout.SOUTH);
+        JButton startButton = new JButton("Start");
+        JButton exitButton = new JButton("Exit");
+        botPanel.add(startButton);
+        botPanel.add(exitButton);
+
+
+        titleScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // TODO: We should probably close the connecting client.
+        titleScreen.setTitle("GetSmart");
+        //frame.pack();
+        titleScreen.setVisible(true);
     }
 }
