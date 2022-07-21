@@ -2,16 +2,19 @@ package client;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class App {
+public class App implements ActionListener {
 
     // TODO: We might need to pass the connecting client socket here, or maybe have a connection button in the app itself?
+    JFrame titleScreen;
     public App() {
 
         // Main Frame with Title Screen
-        JFrame titleScreen = new JFrame();
-        titleScreen.setSize(400, 300);
-
+        titleScreen = new JFrame();
+//        titleScreen.setSize();
+        titleScreen.setExtendedState(JFrame.MAXIMIZED_BOTH);
         // Top Section containing the title
         JPanel topPanel = new JPanel();
         titleScreen.add(topPanel, BorderLayout.NORTH);
@@ -47,6 +50,19 @@ public class App {
         titleScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // TODO: We should probably close the connecting client.
         titleScreen.setTitle("GetSmart");
         //frame.pack();
+        startButton.addActionListener(this);
+        exitButton.addActionListener(this);
         titleScreen.setVisible(true);
     }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getActionCommand().equals("Start")) {
+            new Board();
+            titleScreen.dispose();
+        }else {
+            System.exit(0);
+        }
+    }
+
 }
