@@ -10,7 +10,6 @@ import java.awt.*;
 public class QuestionPage {
 
     public QuestionPage(String question, String questionNumber, String[] answers) {
-
         String frameName = questionNumber;
         String labelName = question;
         String[] buttonAnswers = formatAnswers(answers);
