@@ -74,9 +74,9 @@ public class QuestionPage {
         return tempArray;
     }
 
-    public static void main(String[] args){
-        String[] arr = new String[]{"Yo", "Hi", "Sup", "Hey"};
-        new QuestionPage("Question here", "1", arr);
-    }
+//    public static void main(String[] args){
+//        String[] arr = new String[]{"Yo", "Hi", "Sup", "Hey"};
+//        new QuestionPage("Question here", "1", arr);
+//    }
 
 }
