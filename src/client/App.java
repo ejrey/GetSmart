@@ -97,8 +97,9 @@ public class App implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("Start")) {
             if (AttemptLoginToServer()) {
-//                new Board();
-//                titleScreen.dispose();
+                // We should wait for an incoming message to send the user to the next screen. Check out Client.java
+                new Board();
+                titleScreen.dispose();
             }
         } else if (e.getActionCommand().equals("Exit")) {
             System.exit(0);

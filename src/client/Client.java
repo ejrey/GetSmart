@@ -5,13 +5,11 @@ import middleware.Message;
 import java.io.*;
 import java.net.Socket;
 
-import static server.Server.SendMessage;
-
 public class Client implements Runnable  {
     private Socket socket;
     private BufferedWriter bufferedWriter; // Used to write to the server
     private BufferedReader bufferedReader; // Used to read from the server
-    private String username; // TODO: Hook up username textfield. Send username to server.
+    private String username;
 
     public Client(Socket socket) {
         try {
@@ -44,6 +42,9 @@ public class Client implements Runnable  {
                 var message = Message.Decode(incomingMessageFromServer);
                 switch (message.action) {
                     case SEND_TO_WAITING_ROOM:
+                        username = message.data;
+                        System.out.println("Setting username:");
+                        System.out.println(username);
                         System.out.println("This user should be sent to the waiting room.");
                         break;
                     case IGNORE:

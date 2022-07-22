@@ -40,7 +40,7 @@ public class ClientConnection implements Runnable {
                 switch (message.action) {
                     case SET_USERNAME:
                         username = message.data;
-                        SendMessage(username, Message.Action.SEND_TO_WAITING_ROOM, "");
+                        SendMessage(username, Message.Action.SEND_TO_WAITING_ROOM, username);
                         break;
                     case IGNORE:
                         break;
