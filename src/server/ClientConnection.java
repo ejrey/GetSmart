@@ -1,10 +1,12 @@
 package server;
 
+import middleware.Message;
+
 import java.io.*;
 import java.net.Socket;
 
-import static server.Server.Broadcast;
 import static server.Server.ConnectedClients;
+import static server.Server.SendMessage;
 
 public class ClientConnection implements Runnable {
 
@@ -21,7 +23,6 @@ public class ClientConnection implements Runnable {
             this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             ConnectedClients.add(this);
-            Broadcast("The server is broadcasting a message to the clients...");
         } catch (IOException e) {
             Close();
         }
@@ -35,7 +36,15 @@ public class ClientConnection implements Runnable {
         while (socket.isConnected()) {
             try {
                 incomingMessageFromClient = bufferedReader.readLine();
-                Broadcast(incomingMessageFromClient);
+                var message = Message.Decode(incomingMessageFromClient);
+                switch (message.action) {
+                    case SET_USERNAME:
+                        username = message.data;
+                        SendMessage(username, Message.Action.SEND_TO_WAITING_ROOM, username);
+                        break;
+                    case IGNORE:
+                        break;
+                }
             } catch (IOException e) {
                 Close();
                 break;

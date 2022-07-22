@@ -1,5 +1,7 @@
 package server;
 
+import middleware.Message;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
@@ -25,7 +27,6 @@ public class Server {
             while (!serverSocket.isClosed()) {
                 var socket = serverSocket.accept();
                 var clientConnection = new ClientConnection(socket);
-                System.out.println("Client has connected.");
 
                 var thread = new Thread(clientConnection);
                 thread.start();
@@ -46,6 +47,21 @@ public class Server {
                 client.Close();
             }
         }));
+    }
+
+    // Sends a message to a specific user.
+    public static void SendMessage(String username, Message.Action action, String data) {
+        for (ClientConnection client : ConnectedClients) {
+            if (client.username.equals(username)) {
+                try {
+                    client.bufferedWriter.write(Message.Encode(action, data));
+                    client.bufferedWriter.newLine();
+                    client.bufferedWriter.flush();
+                } catch (IOException ignore) {
+                }
+                break;
+            }
+        }
     }
 
     private void Close() {

@@ -1,5 +1,7 @@
 package client;
 
+import middleware.Message;
+
 import java.io.*;
 import java.net.Socket;
 
@@ -7,18 +9,7 @@ public class Client implements Runnable  {
     private Socket socket;
     private BufferedWriter bufferedWriter; // Used to write to the server
     private BufferedReader bufferedReader; // Used to read from the server
-    private String username; // TODO: Hook up username textfield. Send username to server.
-
-    public static void main(String[] args) throws IOException {
-        var socket = new Socket("localhost", 3000);
-        var client = new Client(socket);
-        client.SendMessageToServer("A client sends a message to the server...");
-
-        var thread = new Thread(client);
-        thread.start();
-
-        new App();
-    }
+    private String username;
 
     public Client(Socket socket) {
         try {
@@ -47,7 +38,18 @@ public class Client implements Runnable  {
         while (socket.isConnected()) {
             try {
                 incomingMessageFromServer = bufferedReader.readLine();
-                System.out.println(incomingMessageFromServer);
+
+                var message = Message.Decode(incomingMessageFromServer);
+                switch (message.action) {
+                    case SEND_TO_WAITING_ROOM:
+                        username = message.data;
+                        System.out.println("Setting username:");
+                        System.out.println(username);
+                        System.out.println("This user should be sent to the waiting room.");
+                        break;
+                    case IGNORE:
+                        break;
+                }
             } catch (IOException e) {
                 Close(socket, bufferedWriter, bufferedReader);
             }
