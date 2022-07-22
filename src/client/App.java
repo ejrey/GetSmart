@@ -55,6 +55,7 @@ public class App implements ActionListener {
         titleScreen.setVisible(true);
     }
 
+    // Initialize the board on this part of the code.
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("Start")) {
