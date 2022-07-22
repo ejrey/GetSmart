@@ -17,7 +17,7 @@ public class Client implements Runnable  {
         var thread = new Thread(client);
         thread.start();
 
-        new App(client);
+        new App();
     }
 
     public Client(Socket socket) {
