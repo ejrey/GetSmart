@@ -80,7 +80,7 @@ public class App implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("Start")) {
-            //new Board();
+            new Board();
             titleScreen.dispose();
         }else if (e.getActionCommand().equals("Exit")) {
             System.exit(0);
