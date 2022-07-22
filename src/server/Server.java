@@ -47,7 +47,7 @@ public class Server {
             }
         }));
     }
-
+//The concept of a question from the server
     private void Close() {
         try {
             if (serverSocket != null) {
