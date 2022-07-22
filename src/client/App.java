@@ -11,7 +11,6 @@ public class App implements ActionListener {
 
     // TODO: We might need to pass the connecting client socket here, or maybe have a connection button in the app itself?
     public App() {
-
         // Main Frame with Title Screen
         titleScreen.setSize(1280, 720);
 

@@ -11,6 +11,7 @@ public class ClientConnection implements Runnable {
     // Talk from Server to a client.
     public BufferedWriter bufferedWriter; // Used to write to the client
     public BufferedReader bufferedReader; // Used to read data from the client
+    public String username;
     private Socket socket;
 
     public ClientConnection(Socket socket) {

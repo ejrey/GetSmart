@@ -7,16 +7,7 @@ public class Client implements Runnable  {
     private Socket socket;
     private BufferedWriter bufferedWriter; // Used to write to the server
     private BufferedReader bufferedReader; // Used to read from the server
-
-    public Client(Socket socket) {
-        try {
-            this.socket = socket;
-            this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-            this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        } catch (IOException e) {
-            Close(socket, bufferedWriter, bufferedReader);
-        }
-    }
+    private String username; // TODO: Hook up username textfield. Send username to server.
 
     public static void main(String[] args) throws IOException {
         var socket = new Socket("localhost", 3000);
@@ -27,6 +18,16 @@ public class Client implements Runnable  {
         thread.start();
 
         new App();
+    }
+
+    public Client(Socket socket) {
+        try {
+            this.socket = socket;
+            this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+            this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        } catch (IOException e) {
+            Close(socket, bufferedWriter, bufferedReader);
+        }
     }
 
     public void SendMessageToServer(String message) {
