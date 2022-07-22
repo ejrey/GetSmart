@@ -1,15 +1,23 @@
 package client;
 
+import middleware.Message;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.Socket;
 
 public class App implements ActionListener {
 
-    JFrame titleScreen = new JFrame();
+    public static void main(String[] args) {
+        new App();
+    }
 
-    // TODO: We might need to pass the connecting client socket here, or maybe have a connection button in the app itself?
+    JFrame titleScreen = new JFrame();
+    JTextField usernameField;
+
     public App() {
         // Main Frame with Title Screen
         titleScreen.setSize(1280, 720);
@@ -37,10 +45,10 @@ public class App implements ActionListener {
         mainPanel.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
         //midPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
         JLabel nameLabel = new JLabel("Enter a username:    ");
-        JTextField nameTextField = new JTextField(50);
+        usernameField = new JTextField(50);
 
         usernamePanel.add(nameLabel);
-        usernamePanel.add(nameTextField);
+        usernamePanel.add(usernameField);
         usernamePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JLabel portLabel = new JLabel("Enter a port number to the server    :    ");
@@ -52,9 +60,8 @@ public class App implements ActionListener {
         usernamePanel.setLayout(new BoxLayout(usernamePanel, BoxLayout.X_AXIS));
         portPanel.setLayout(new BoxLayout(portPanel, BoxLayout.X_AXIS));
 
-        nameTextField.setMaximumSize(new Dimension(250, 25));
+        usernameField.setMaximumSize(new Dimension(250, 25));
         namePortField.setMaximumSize(new Dimension(150, 25));
-
 
         // Bot-Section with start button
         JPanel botPanel = new JPanel();
@@ -72,18 +79,29 @@ public class App implements ActionListener {
         exitButton.addActionListener(this);
 
         titleScreen.setVisible(true);
+    }
 
-
+    private boolean AttemptLoginToServer() {
+        try {
+            var socket = new Socket("localhost", 3000);
+            var client = new Client(socket);
+            client.SendMessageToServer(Message.Encode(Message.Action.SET_USERNAME, usernameField.getText()));
+            var thread = new Thread(client);
+            thread.start();
+            return true;
+        } catch (IOException ignored) {}
+        return false;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("Start")) {
-            new Board();
-            titleScreen.dispose();
-        }else if (e.getActionCommand().equals("Exit")) {
+            if (AttemptLoginToServer()) {
+//                new Board();
+//                titleScreen.dispose();
+            }
+        } else if (e.getActionCommand().equals("Exit")) {
             System.exit(0);
         }
     }
-
 }
