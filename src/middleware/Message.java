@@ -2,9 +2,9 @@ package middleware;
 
 public class Message {
     public enum Action {
-        IGNORE,
-        SET_USERNAME,
-        SEND_TO_WAITING_ROOM,
+        IGNORE, // empty string
+        SET_USERNAME, // ClientData json object
+        SEND_TO_WAITING_ROOM, // ClientData json object
     }
 
     public Action action;

@@ -1,12 +1,12 @@
 package server;
 
+import middleware.ClientData;
 import middleware.Message;
 
 import java.io.*;
 import java.net.Socket;
 
-import static server.Server.ConnectedClients;
-import static server.Server.SendMessage;
+import static server.Server.*;
 
 public class ClientConnection implements Runnable {
 
@@ -39,8 +39,9 @@ public class ClientConnection implements Runnable {
                 var message = Message.Decode(incomingMessageFromClient);
                 switch (message.action) {
                     case SET_USERNAME:
-                        username = message.data;
-                        SendMessage(username, Message.Action.SEND_TO_WAITING_ROOM, username);
+                        var clientData = GSON.fromJson(message.data, ClientData.class);
+                        username = clientData.username;
+                        To(username, Message.Action.SEND_TO_WAITING_ROOM, GSON.toJson(clientData));
                         break;
                     case IGNORE:
                         break;

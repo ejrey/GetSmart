@@ -1,5 +1,7 @@
 package client;
 
+import com.google.gson.Gson;
+import middleware.ClientData;
 import middleware.Message;
 
 import javax.swing.*;
@@ -14,6 +16,7 @@ public class App implements ActionListener {
     public static void main(String[] args) {
         new App();
     }
+    public static final Gson GSON = new Gson();
 
     JFrame titleScreen = new JFrame();
     JTextField usernameField;
@@ -81,26 +84,28 @@ public class App implements ActionListener {
         titleScreen.setVisible(true);
     }
 
-    private boolean AttemptLoginToServer() {
+    // TODO: This should go to the waiting room instead of the Board();
+    public void GoToWaitingRoom() {
+        new Board();
+        titleScreen.dispose();
+    }
+
+    private void LoginToServer() {
         try {
             var socket = new Socket("localhost", 3000);
-            var client = new Client(socket);
-            client.SendMessageToServer(Message.Encode(Message.Action.SET_USERNAME, usernameField.getText()));
+            var client = new Client(this, socket);
+            var clientData = new ClientData();
+            clientData.username = usernameField.getText();
+            client.SendMessageToServer(Message.Encode(Message.Action.SET_USERNAME, GSON.toJson(clientData)));
             var thread = new Thread(client);
             thread.start();
-            return true;
         } catch (IOException ignored) {}
-        return false;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("Start")) {
-            if (AttemptLoginToServer()) {
-                // We should wait for an incoming message to send the user to the next screen. Check out Client.java
-                new Board();
-                titleScreen.dispose();
-            }
+            LoginToServer();
         } else if (e.getActionCommand().equals("Exit")) {
             System.exit(0);
         }

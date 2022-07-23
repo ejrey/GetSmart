@@ -1,5 +1,6 @@
 package server;
 
+import com.google.gson.Gson;
 import middleware.Message;
 
 import java.io.IOException;
@@ -7,7 +8,7 @@ import java.net.ServerSocket;
 import java.util.ArrayList;
 
 public class Server {
-
+    public static final Gson GSON = new Gson();
     public static ArrayList<ClientConnection> ConnectedClients = new ArrayList<>();
 
     private final ServerSocket serverSocket;
@@ -50,7 +51,7 @@ public class Server {
     }
 
     // Sends a message to a specific user.
-    public static void SendMessage(String username, Message.Action action, String data) {
+    public static void To(String username, Message.Action action, String data) {
         for (ClientConnection client : ConnectedClients) {
             if (client.username.equals(username)) {
                 try {
