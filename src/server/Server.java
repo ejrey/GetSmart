@@ -38,10 +38,10 @@ public class Server {
     }
 
     // Sends a message to every connected client.
-    public static void Broadcast(String message) {
+    public static void Broadcast(Message message) {
         ConnectedClients.forEach((client -> {
             try {
-                client.bufferedWriter.write(message);
+                client.bufferedWriter.write(Message.Encode(message));
                 client.bufferedWriter.newLine();
                 client.bufferedWriter.flush();
             } catch (IOException e) {
@@ -51,11 +51,11 @@ public class Server {
     }
 
     // Sends a message to a specific user.
-    public static void To(String username, Message.Action action, String data) {
+    public static void To(String username, Message message) {
         for (ClientConnection client : ConnectedClients) {
             if (client.username.equals(username)) {
                 try {
-                    client.bufferedWriter.write(Message.Encode(action, data));
+                    client.bufferedWriter.write(Message.Encode(message));
                     client.bufferedWriter.newLine();
                     client.bufferedWriter.flush();
                 } catch (IOException ignore) {

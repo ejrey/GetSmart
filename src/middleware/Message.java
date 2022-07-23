@@ -11,14 +11,17 @@ public class Message {
     public String data;
     private static final String delimiter = ":";
 
-    public static String Encode(Action action, String message) {
-        return action.name().concat(delimiter).concat(message).concat("\n");
+    public Message(Action action, String data) {
+        this.action = action;
+        this.data = data;
+    }
+
+    public static String Encode(Message message) {
+        return message.action.name().concat(delimiter).concat(message.data).concat("\n");
     }
 
     public static Message Decode(String encoded) {
-        var message = new Message();
-        message.action = Action.IGNORE;
-        message.data = "";
+        var message = new Message(Action.IGNORE, "");
 
         var split = encoded.split(delimiter, 2);
         if (split.length != 2)

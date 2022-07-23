@@ -41,7 +41,7 @@ public class ClientConnection implements Runnable {
                     case SET_USERNAME:
                         var clientData = GSON.fromJson(message.data, ClientData.class);
                         username = clientData.username;
-                        To(username, Message.Action.SEND_TO_WAITING_ROOM, GSON.toJson(clientData));
+                        To(username, new Message(Message.Action.SEND_TO_WAITING_ROOM, GSON.toJson(clientData)));
                         break;
                     case IGNORE:
                         break;

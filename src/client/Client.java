@@ -26,9 +26,9 @@ public class Client implements Runnable  {
         }
     }
 
-    public void SendMessageToServer(String message) {
+    public void SendMessageToServer(Message message) {
         try {
-            bufferedWriter.write(message);
+            bufferedWriter.write(Message.Encode(message));
             bufferedWriter.newLine();
             bufferedWriter.flush();
         } catch (IOException e) {

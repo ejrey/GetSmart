@@ -96,7 +96,7 @@ public class App implements ActionListener {
             var client = new Client(this, socket);
             var clientData = new ClientData();
             clientData.username = usernameField.getText();
-            client.SendMessageToServer(Message.Encode(Message.Action.SET_USERNAME, GSON.toJson(clientData)));
+            client.SendMessageToServer(new Message(Message.Action.SET_USERNAME, GSON.toJson(clientData)));
             var thread = new Thread(client);
             thread.start();
         } catch (IOException ignored) {}
