@@ -1,16 +1,19 @@
 package server;
 
+import middleware.ClientData;
+import middleware.Message;
+
 import java.io.*;
 import java.net.Socket;
 
-import static server.Server.Broadcast;
-import static server.Server.ConnectedClients;
+import static server.Server.*;
 
 public class ClientConnection implements Runnable {
 
     // Talk from Server to a client.
     public BufferedWriter bufferedWriter; // Used to write to the client
     public BufferedReader bufferedReader; // Used to read data from the client
+    public String username;
     private Socket socket;
 
     public ClientConnection(Socket socket) {
@@ -20,7 +23,6 @@ public class ClientConnection implements Runnable {
             this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             ConnectedClients.add(this);
-            Broadcast("The server is broadcasting a message to the clients...");
         } catch (IOException e) {
             Close();
         }
@@ -34,7 +36,16 @@ public class ClientConnection implements Runnable {
         while (socket.isConnected()) {
             try {
                 incomingMessageFromClient = bufferedReader.readLine();
-                Broadcast(incomingMessageFromClient);
+                var message = Message.Decode(incomingMessageFromClient);
+                switch (message.action) {
+                    case SET_USERNAME:
+                        var clientData = GSON.fromJson(message.data, ClientData.class);
+                        username = clientData.username;
+                        To(username, new Message(Message.Action.SEND_TO_WAITING_ROOM, GSON.toJson(clientData)));
+                        break;
+                    case IGNORE:
+                        break;
+                }
             } catch (IOException e) {
                 Close();
                 break;

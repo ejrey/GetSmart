@@ -1,15 +1,23 @@
 package client;
 
+import middleware.ClientData;
+import middleware.Message;
+
 import java.io.*;
 import java.net.Socket;
 
+import static server.Server.GSON;
+
 public class Client implements Runnable  {
+    private App app;
     private Socket socket;
     private BufferedWriter bufferedWriter; // Used to write to the server
     private BufferedReader bufferedReader; // Used to read from the server
+    private String username;
 
-    public Client(Socket socket) {
+    public Client(App app, Socket socket) {
         try {
+            this.app = app;
             this.socket = socket;
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -18,20 +26,9 @@ public class Client implements Runnable  {
         }
     }
 
-    public static void main(String[] args) throws IOException {
-        var socket = new Socket("localhost", 3000);
-        var client = new Client(socket);
-        client.SendMessageToServer("A client sends a message to the server...");
-
-        var thread = new Thread(client);
-        thread.start();
-
-        new App();
-    }
-
-    public void SendMessageToServer(String message) {
+    public void SendMessageToServer(Message message) {
         try {
-            bufferedWriter.write(message);
+            bufferedWriter.write(Message.Encode(message));
             bufferedWriter.newLine();
             bufferedWriter.flush();
         } catch (IOException e) {
@@ -46,7 +43,18 @@ public class Client implements Runnable  {
         while (socket.isConnected()) {
             try {
                 incomingMessageFromServer = bufferedReader.readLine();
-                System.out.println(incomingMessageFromServer);
+
+                var message = Message.Decode(incomingMessageFromServer);
+                switch (message.action) {
+                    case SEND_TO_WAITING_ROOM:
+                        var clientData = GSON.fromJson(message.data, ClientData.class);
+                        username = clientData.username;
+                        System.out.println(username);
+                        app.GoToWaitingRoom();
+                        break;
+                    case IGNORE:
+                        break;
+                }
             } catch (IOException e) {
                 Close(socket, bufferedWriter, bufferedReader);
             }
