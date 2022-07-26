@@ -6,15 +6,20 @@ package client;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class QuestionPage {
+public class QuestionPage implements ActionListener{
+
+    JFrame questionFrame;
 
     public QuestionPage(String question, String questionNumber, String[] answers) {
         String frameName = questionNumber;
         String labelName = question;
         String[] buttonAnswers = formatAnswers(answers);
 
-        JFrame questionFrame = new JFrame(frameName);
+        questionFrame = new JFrame(frameName);
+
         questionFrame.setSize(1280, 720);
 
         JPanel mainPanel = new JPanel();
@@ -36,7 +41,7 @@ public class QuestionPage {
 
         for(int i = 0; i<buttonAnswers.length; i++){
             String number = Integer.toString(i+1);
-            createAnswerPanel(questionAnswerPanel, buttonAnswers, number, i);
+                createAnswerPanel(questionAnswerPanel, buttonAnswers, number, i);
         }
 
         questionAnswerPanel.setSize(200, 100);
@@ -48,6 +53,7 @@ public class QuestionPage {
         answerPanel.setLayout((new BoxLayout(answerPanel, BoxLayout.X_AXIS)));
         answerPanel.setBorder(BorderFactory.createEmptyBorder(25, 10, 25, 10));
         JButton button = new JButton(s);
+        button.addActionListener(this);
         JLabel answer = new JLabel(buttonAnswers[i]);
         answer.setMaximumSize(new Dimension(800, 25));
         answerPanel.add(button);
@@ -73,9 +79,30 @@ public class QuestionPage {
         return tempArray;
     }
 
-//    public static void main(String[] args){
-//        String[] arr = new String[]{"Yo", "Hi", "Sup", "Hey"};
-//        new QuestionPage("Question here", "1", arr);
-//    }
+    public static void main(String[] args){
+        String[] arr = new String[]{"Yo", "Hi", "Sup", "Hey"};
+        new QuestionPage("Question here", "1", arr);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e){
+        if (e.getActionCommand().equals("1")){
+            questionFrame.dispose();
+            emptyFunction();
+        } else if (e.getActionCommand().equals("2")){
+            questionFrame.dispose();
+            emptyFunction();
+        } else if (e.getActionCommand().equals("3")){
+            questionFrame.dispose();
+            emptyFunction();
+        } else if (e.getActionCommand().equals("4")){
+            questionFrame.dispose();
+            emptyFunction();
+        }
+    }
+
+    private void emptyFunction(){
+
+    }
 
 }
