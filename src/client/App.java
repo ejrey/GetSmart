@@ -13,10 +13,9 @@ import java.net.Socket;
 
 public class App implements ActionListener {
 
-    public static void main(String[] args) {
-        new App();
-    }
+    public static void main(String[] args) {}
     public static final Gson GSON = new Gson();
+    private static final App Instance = new App();
 
     JFrame titleScreen = new JFrame();
     JTextField usernameField;
@@ -91,16 +90,10 @@ public class App implements ActionListener {
         titleScreen.setVisible(true);
     }
 
-    // TODO: This should go to the waiting room instead of the Board();
-    public void GoToWaitingRoom() {
-        new WaitingRoom();
-        titleScreen.dispose();
-    }
-
     private void LoginToServer() {
         try {
             var socket = new Socket("localhost", 3000);
-            var client = new Client(this, socket);
+            var client = new Client(socket);
             var clientData = new ClientData();
             clientData.username = usernameField.getText();
             client.SendMessageToServer(new Message(Message.Action.SET_USERNAME, GSON.toJson(clientData)));
@@ -116,5 +109,15 @@ public class App implements ActionListener {
         } else if (e.getActionCommand().equals("Exit")) {
             System.exit(0);
         }
+    }
+
+    // TODO: We should put every type of screen inside of this single class.
+    // If you want to call any UI change, it needs to be inside of "SwingUtilities.invokeLater"!
+    // You can use "Instance." to access the original App instance.
+    public static void GoToWaitingRoom() {
+        SwingUtilities.invokeLater(() -> {
+            new WaitingRoom();
+            Instance.titleScreen.dispose();
+        });
     }
 }

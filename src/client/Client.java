@@ -9,15 +9,13 @@ import java.net.Socket;
 import static server.Server.GSON;
 
 public class Client implements Runnable  {
-    private App app;
     private Socket socket;
     private BufferedWriter bufferedWriter; // Used to write to the server
     private BufferedReader bufferedReader; // Used to read from the server
     private String username;
 
-    public Client(App app, Socket socket) {
+    public Client(Socket socket) {
         try {
-            this.app = app;
             this.socket = socket;
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -49,8 +47,7 @@ public class Client implements Runnable  {
                     case SEND_TO_WAITING_ROOM:
                         var clientData = GSON.fromJson(message.data, ClientData.class);
                         username = clientData.username;
-                        System.out.println(username);
-                        app.GoToWaitingRoom();
+                        App.GoToWaitingRoom();
                         break;
                     case IGNORE:
                         break;
