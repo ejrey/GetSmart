@@ -28,11 +28,25 @@ public class WaitingRoom implements ActionListener {
         mainPanel.add(midPanel);
         midPanel.setLayout(new BoxLayout(midPanel, BoxLayout.X_AXIS));
 
+
+        // Usernames
+
         JPanel playerOne = new JPanel();
         JPanel playerTwo = new JPanel();
         JPanel playerThree = new JPanel();
         JPanel playerFour = new JPanel();
         JPanel playerFive = new JPanel();
+
+        JLabel oneText = new JLabel("Ben");
+        oneText.setFont(new Font("Verdana", Font.PLAIN, 20));
+        JLabel twoText = new JLabel("Matthew");
+        twoText.setFont(new Font("Verdana", Font.PLAIN, 20));
+        JLabel threeText = new JLabel("Daniel");
+        threeText.setFont(new Font("Verdana", Font.PLAIN, 20));
+        JLabel fourText = new JLabel("Randy");
+        fourText.setFont(new Font("Verdana", Font.PLAIN, 20));
+        JLabel fiveText = new JLabel("Eric");
+        fiveText.setFont(new Font("Verdana", Font.PLAIN, 20));
 
         midPanel.add(playerOne);
         midPanel.add(playerTwo);
@@ -40,21 +54,17 @@ public class WaitingRoom implements ActionListener {
         midPanel.add(playerFour);
         midPanel.add(playerFive);
 
-        playerOne.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Color.CYAN, 20),
-                BorderFactory.createEmptyBorder(20, 0, 20, 10)));
-        playerTwo.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Color.CYAN, 20),
-                BorderFactory.createEmptyBorder(20, 0, 20, 10)));
-        playerThree.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Color.CYAN, 20),
-                BorderFactory.createEmptyBorder(20, 0, 20, 10)));
-        playerFour.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Color.CYAN, 20),
-                BorderFactory.createEmptyBorder(20, 0, 20, 10)));
-        playerFive.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Color.CYAN, 20),
-                BorderFactory.createEmptyBorder(20, 0, 20, 10)));
+        playerOne.add(oneText);
+        playerTwo.add(twoText);
+        playerThree.add(threeText);
+        playerFour.add(fourText);
+        playerFive.add(fiveText);
+
+        playerOne.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 10));
+        playerTwo.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 10));
+        playerThree.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 10));
+        playerFour.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 10));
+        playerFive.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 10));
 
         JPanel botPanel = new JPanel();
         mainPanel.add(botPanel);
