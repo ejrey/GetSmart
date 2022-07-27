@@ -4,6 +4,9 @@
 
 package client;
 
+import middleware.AnswerData;
+import middleware.Message;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -13,8 +16,9 @@ public class QuestionPage implements ActionListener{
 
     JFrame questionFrame;
 
-    public QuestionPage(String question, String questionNumber, String[] answers) {
-        String frameName = questionNumber;
+    public QuestionPage(String question, int row, int col, String[] answers) {
+
+        String frameName = "";
         String labelName = question;
         String[] buttonAnswers = formatAnswers(answers);
 
@@ -81,28 +85,29 @@ public class QuestionPage implements ActionListener{
 
     public static void main(String[] args){
         String[] arr = new String[]{"Yo", "Hi", "Sup", "Hey"};
-        new QuestionPage("Question here", "1", arr);
+        new QuestionPage("Question here", 1, 1, arr);
     }
 
     @Override
     public void actionPerformed(ActionEvent e){
+        var answerData = new AnswerData();
         if (e.getActionCommand().equals("1")){
             questionFrame.dispose();
-            emptyFunction();
+            emptyFunction(answerData);
         } else if (e.getActionCommand().equals("2")){
             questionFrame.dispose();
-            emptyFunction();
+            emptyFunction(answerData);
         } else if (e.getActionCommand().equals("3")){
             questionFrame.dispose();
-            emptyFunction();
+            emptyFunction(answerData);
         } else if (e.getActionCommand().equals("4")){
             questionFrame.dispose();
-            emptyFunction();
+            emptyFunction(answerData);
         }
     }
 
-    private void emptyFunction(){
-
+    private void emptyFunction(AnswerData answerData, client){
+        client.SendMessageToServer(new Message(Message.Action.SEND_ANSWER_TO_SERVER, GSON.toJson(answerData)));
     }
 
 }
