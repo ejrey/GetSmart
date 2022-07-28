@@ -59,9 +59,10 @@ public class Client implements Runnable  {
                     case WAITING_ROOM_UPDATE_USERNAMES:
                         ArrayList<ClientData> clientsData = GSON.fromJson(message.data, new TypeToken<ArrayList<ClientData>>(){}.getType());
                         App.UpdateWaitingRoomUserNames(clientsData);
+                        break;
                     case QUESTION_DATA_RECEIVED:
                         var questionData = GSON.fromJson(message.data, QuestionData.class);
-                        App.GoToQuestionPage(questionData.question, questionData.row, questionData.col, questionData.answers, this);
+                        App.GoToQuestionPage(questionData.question, questionData.row, questionData.col, questionData.answers);
                         break;
                     case IGNORE:
                         break;

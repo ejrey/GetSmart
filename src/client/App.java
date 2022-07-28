@@ -20,6 +20,7 @@ public class App implements ActionListener {
 
     JFrame titleScreen = new JFrame();
     WaitingRoom waitingRoom;
+    QuestionPage questionPage;
     JTextField usernameField;
 
     public App() {
@@ -104,9 +105,11 @@ public class App implements ActionListener {
         } catch (IOException ignored) {}
     }
 
-    public static void GoToQuestionPage(String question, int row, int col, String[] answers, Client client) {
-        new QuestionPage(question, row, col, answers, client);
-        //board.dispose(); talk to daniel and eric
+    public static void GoToQuestionPage(String question, int row, int col, String[] answers) {
+        SwingUtilities.invokeLater(() -> {
+            App.Instance.questionPage = new QuestionPage(question, row, col, answers);
+            //board.dispose(); talk to daniel and eric
+        });
     }
 
     @Override

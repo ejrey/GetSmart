@@ -25,12 +25,11 @@ public class QuestionPage implements ActionListener{
     int row;
     int col;
 
-    public QuestionPage(String question, int row, int col, String[] answers, Client client) {
+    public QuestionPage(String question, int row, int col, String[] answers) {
 
         frameName = "";
         labelName = question;
         buttonAnswers = formatAnswers(answers);
-        this.client = client;
         this.row = row;
         this.col = col;
 
