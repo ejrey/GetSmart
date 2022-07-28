@@ -2,6 +2,7 @@ package client;
 
 import middleware.ClientData;
 import middleware.Message;
+import middleware.QuestionData;
 
 import java.io.*;
 import java.net.Socket;
@@ -51,6 +52,10 @@ public class Client implements Runnable  {
                         username = clientData.username;
                         System.out.println(username);
                         app.GoToWaitingRoom();
+                        break;
+                    case QUESTION_DATA_RECEIVED:
+                        var questionData = GSON.fromJson(message.data, QuestionData.class);
+                        app.GoToQuestionPage(questionData.question, questionData.row, questionData.col, questionData.answers, this);
                         break;
                     case IGNORE:
                         break;

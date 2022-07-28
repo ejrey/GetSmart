@@ -4,6 +4,10 @@
 
 package client;
 
+import com.google.gson.Gson;
+import middleware.AnswerData;
+import middleware.Message;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -11,12 +15,17 @@ import java.awt.event.ActionListener;
 
 public class QuestionPage implements ActionListener{
 
-    JFrame questionFrame;
+    public static final Gson GSON = new Gson();
 
-    public QuestionPage(String question, String questionNumber, String[] answers) {
-        String frameName = questionNumber;
+    JFrame questionFrame;
+    Client client;
+
+    public QuestionPage(String question, int row, int col, String[] answers, Client client) {
+
+        String frameName = "";
         String labelName = question;
         String[] buttonAnswers = formatAnswers(answers);
+        this.client = client;
 
         questionFrame = new JFrame(frameName);
 
@@ -79,30 +88,31 @@ public class QuestionPage implements ActionListener{
         return tempArray;
     }
 
-    public static void main(String[] args){
-        String[] arr = new String[]{"Yo", "Hi", "Sup", "Hey"};
-        new QuestionPage("Question here", "1", arr);
-    }
+//    public static void main(String[] args){
+//        String[] arr = new String[]{"Yo", "Hi", "Sup", "Hey"};
+//        new QuestionPage("Question here", 1, 1, arr);
+//    }
 
     @Override
     public void actionPerformed(ActionEvent e){
+        var answerData = new AnswerData();
         if (e.getActionCommand().equals("1")){
             questionFrame.dispose();
-            emptyFunction();
+            emptyFunction(answerData);
         } else if (e.getActionCommand().equals("2")){
             questionFrame.dispose();
-            emptyFunction();
+            emptyFunction(answerData);
         } else if (e.getActionCommand().equals("3")){
             questionFrame.dispose();
-            emptyFunction();
+            emptyFunction(answerData);
         } else if (e.getActionCommand().equals("4")){
             questionFrame.dispose();
-            emptyFunction();
+            emptyFunction(answerData);
         }
     }
 
-    private void emptyFunction(){
-
+    private void emptyFunction(AnswerData answerData){
+        client.SendMessageToServer(new Message(Message.Action.SEND_ANSWER_TO_SERVER, GSON.toJson(answerData)));
     }
 
 }
