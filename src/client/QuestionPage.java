@@ -4,6 +4,7 @@
 
 package client;
 
+import com.google.gson.Gson;
 import middleware.AnswerData;
 import middleware.Message;
 
@@ -13,6 +14,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class QuestionPage implements ActionListener{
+
+    public static final Gson GSON = new Gson();
 
     JFrame questionFrame;
     Client client;
@@ -85,10 +88,10 @@ public class QuestionPage implements ActionListener{
         return tempArray;
     }
 
-    public static void main(String[] args){
-        String[] arr = new String[]{"Yo", "Hi", "Sup", "Hey"};
-        new QuestionPage("Question here", 1, 1, arr);
-    }
+//    public static void main(String[] args){
+//        String[] arr = new String[]{"Yo", "Hi", "Sup", "Hey"};
+//        new QuestionPage("Question here", 1, 1, arr);
+//    }
 
     @Override
     public void actionPerformed(ActionEvent e){
