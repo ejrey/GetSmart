@@ -4,6 +4,10 @@
 
 package client;
 
+import com.google.gson.Gson;
+import middleware.AnswerData;
+import middleware.Message;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -11,12 +15,24 @@ import java.awt.event.ActionListener;
 
 public class QuestionPage implements ActionListener{
 
-    JFrame questionFrame;
+    public static final Gson GSON = new Gson();
 
-    public QuestionPage(String question, String questionNumber, String[] answers) {
-        String frameName = questionNumber;
-        String labelName = question;
-        String[] buttonAnswers = formatAnswers(answers);
+    JFrame questionFrame;
+    Client client;
+    String frameName;
+    String labelName;
+    String[] buttonAnswers;
+    int row;
+    int col;
+
+    public QuestionPage(String question, int row, int col, String[] answers, Client client) {
+
+        frameName = "";
+        labelName = question;
+        buttonAnswers = formatAnswers(answers);
+        this.client = client;
+        this.row = row;
+        this.col = col;
 
         questionFrame = new JFrame(frameName);
 
@@ -79,30 +95,34 @@ public class QuestionPage implements ActionListener{
         return tempArray;
     }
 
-    public static void main(String[] args){
-        String[] arr = new String[]{"Yo", "Hi", "Sup", "Hey"};
-        new QuestionPage("Question here", "1", arr);
-    }
+//    public static void main(String[] args){
+//        String[] arr = new String[]{"Yo", "Hi", "Sup", "Hey"};
+//        new QuestionPage("Question here", 1, 1, arr);
+//    }
 
     @Override
     public void actionPerformed(ActionEvent e){
         if (e.getActionCommand().equals("1")){
             questionFrame.dispose();
-            emptyFunction();
+            var answerData = new AnswerData("1", row, col, client.getUsername());
+            emptyFunction(answerData);
         } else if (e.getActionCommand().equals("2")){
             questionFrame.dispose();
-            emptyFunction();
+            var answerData = new AnswerData("2", row, col, client.getUsername());
+            emptyFunction(answerData);
         } else if (e.getActionCommand().equals("3")){
             questionFrame.dispose();
-            emptyFunction();
+            var answerData = new AnswerData("3", row, col, client.getUsername());
+            emptyFunction(answerData);
         } else if (e.getActionCommand().equals("4")){
             questionFrame.dispose();
-            emptyFunction();
+            var answerData = new AnswerData("4", row, col, client.getUsername());
+            emptyFunction(answerData);
         }
     }
 
-    private void emptyFunction(){
-
+    private void emptyFunction(AnswerData answerData){
+        client.SendMessageToServer(new Message(Message.Action.SEND_ANSWER_TO_SERVER, GSON.toJson(answerData)));
     }
 
 }
