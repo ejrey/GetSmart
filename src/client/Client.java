@@ -1,29 +1,28 @@
 package client;
 
+import com.google.gson.reflect.TypeToken;
 import middleware.ClientData;
 import middleware.Message;
 import middleware.QuestionData;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 
 import static server.Server.GSON;
 
 public class Client implements Runnable  {
-    private App app;
     private Socket socket;
     private BufferedWriter bufferedWriter; // Used to write to the server
     private BufferedReader bufferedReader; // Used to read from the server
+    private String username;
 
     public String getUsername() {
         return username;
     }
 
-    private String username;
-
-    public Client(App app, Socket socket) {
+    public Client(Socket socket) {
         try {
-            this.app = app;
             this.socket = socket;
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -55,12 +54,14 @@ public class Client implements Runnable  {
                     case SEND_TO_WAITING_ROOM:
                         var clientData = GSON.fromJson(message.data, ClientData.class);
                         username = clientData.username;
-                        System.out.println(username);
-                        app.GoToWaitingRoom();
+                        App.GoToWaitingRoom();
                         break;
+                    case WAITING_ROOM_UPDATE_USERNAMES:
+                        ArrayList<ClientData> clientsData = GSON.fromJson(message.data, new TypeToken<ArrayList<ClientData>>(){}.getType());
+                        App.UpdateWaitingRoomUserNames(clientsData);
                     case QUESTION_DATA_RECEIVED:
                         var questionData = GSON.fromJson(message.data, QuestionData.class);
-                        app.GoToQuestionPage(questionData.question, questionData.row, questionData.col, questionData.answers, this);
+                        App.GoToQuestionPage(questionData.question, questionData.row, questionData.col, questionData.answers, this);
                         break;
                     case IGNORE:
                         break;

@@ -1,13 +1,18 @@
 package client;
 
+import middleware.ClientData;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class WaitingRoom implements ActionListener {
 
     JFrame waitingRoomFrame = new JFrame();
+    JLabel usernameText;
+
     public WaitingRoom() {
         waitingRoomFrame.setSize(1280, 720);
 
@@ -30,41 +35,12 @@ public class WaitingRoom implements ActionListener {
 
 
         // Usernames
-
-        JPanel playerOne = new JPanel();
-        JPanel playerTwo = new JPanel();
-        JPanel playerThree = new JPanel();
-        JPanel playerFour = new JPanel();
-        JPanel playerFive = new JPanel();
-
-        JLabel oneText = new JLabel("Ben");
-        oneText.setFont(new Font("Verdana", Font.PLAIN, 20));
-        JLabel twoText = new JLabel("Matthew");
-        twoText.setFont(new Font("Verdana", Font.PLAIN, 20));
-        JLabel threeText = new JLabel("Daniel");
-        threeText.setFont(new Font("Verdana", Font.PLAIN, 20));
-        JLabel fourText = new JLabel("Randy");
-        fourText.setFont(new Font("Verdana", Font.PLAIN, 20));
-        JLabel fiveText = new JLabel("Eric");
-        fiveText.setFont(new Font("Verdana", Font.PLAIN, 20));
-
-        midPanel.add(playerOne);
-        midPanel.add(playerTwo);
-        midPanel.add(playerThree);
-        midPanel.add(playerFour);
-        midPanel.add(playerFive);
-
-        playerOne.add(oneText);
-        playerTwo.add(twoText);
-        playerThree.add(threeText);
-        playerFour.add(fourText);
-        playerFive.add(fiveText);
-
-        playerOne.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 10));
-        playerTwo.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 10));
-        playerThree.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 10));
-        playerFour.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 10));
-        playerFive.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 10));
+        JPanel usernames = new JPanel();
+        usernameText = new JLabel("");
+        usernameText.setFont(new Font("Verdana", Font.PLAIN, 20));
+        midPanel.add(usernames);
+        usernames.add(usernameText);
+        usernames.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 10));
 
         JPanel botPanel = new JPanel();
         mainPanel.add(botPanel);
@@ -75,6 +51,15 @@ public class WaitingRoom implements ActionListener {
         startButton.addActionListener(this);
 
         waitingRoomFrame.setVisible(true);
+    }
+
+    public void UpdateUsernames(ArrayList<ClientData> clients) {
+        StringBuilder stringBuilder = new StringBuilder();
+        clients.forEach((clientData -> {
+            stringBuilder.append(clientData.username);
+            stringBuilder.append(" ");
+        }));
+        usernameText.setText(stringBuilder.toString());
     }
 
     public void GoToBoard() {

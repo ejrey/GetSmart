@@ -31,6 +31,8 @@ public class QuestionPage implements ActionListener{
         labelName = question;
         buttonAnswers = formatAnswers(answers);
         this.client = client;
+        this.row = row;
+        this.col = col;
 
         questionFrame = new JFrame(frameName);
 
