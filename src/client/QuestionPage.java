@@ -19,12 +19,17 @@ public class QuestionPage implements ActionListener{
 
     JFrame questionFrame;
     Client client;
+    String frameName;
+    String labelName;
+    String[] buttonAnswers;
+    int row;
+    int col;
 
     public QuestionPage(String question, int row, int col, String[] answers, Client client) {
 
-        String frameName = "";
-        String labelName = question;
-        String[] buttonAnswers = formatAnswers(answers);
+        frameName = "";
+        labelName = question;
+        buttonAnswers = formatAnswers(answers);
         this.client = client;
 
         questionFrame = new JFrame(frameName);
@@ -95,18 +100,21 @@ public class QuestionPage implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e){
-        var answerData = new AnswerData();
         if (e.getActionCommand().equals("1")){
             questionFrame.dispose();
+            var answerData = new AnswerData("1", row, col, client.getUsername());
             emptyFunction(answerData);
         } else if (e.getActionCommand().equals("2")){
             questionFrame.dispose();
+            var answerData = new AnswerData("2", row, col, client.getUsername());
             emptyFunction(answerData);
         } else if (e.getActionCommand().equals("3")){
             questionFrame.dispose();
+            var answerData = new AnswerData("3", row, col, client.getUsername());
             emptyFunction(answerData);
         } else if (e.getActionCommand().equals("4")){
             questionFrame.dispose();
+            var answerData = new AnswerData("4", row, col, client.getUsername());
             emptyFunction(answerData);
         }
     }
