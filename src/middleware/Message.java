@@ -3,9 +3,12 @@ package middleware;
 public class Message {
     public enum Action {
         IGNORE, // empty string
-        SET_USERNAME, // ClientData
-        SEND_TO_WAITING_ROOM, // ClientData
         WAITING_ROOM_UPDATE_USERNAMES, // ArrayList of ClientData
+        SET_USERNAME, // ClientData json object
+        SEND_TO_WAITING_ROOM, // ClientData json object
+        SEND_ANSWER_TO_SERVER,
+        REQUEST_SERVER_FOR_QUESTION_INFO,
+        QUESTION_DATA_RECEIVED // From server to client, client should render question page from body data
     }
 
     public Action action;

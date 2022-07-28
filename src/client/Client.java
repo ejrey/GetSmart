@@ -3,6 +3,7 @@ package client;
 import com.google.gson.reflect.TypeToken;
 import middleware.ClientData;
 import middleware.Message;
+import middleware.QuestionData;
 
 import java.io.*;
 import java.net.Socket;
@@ -15,6 +16,10 @@ public class Client implements Runnable  {
     private BufferedWriter bufferedWriter; // Used to write to the server
     private BufferedReader bufferedReader; // Used to read from the server
     private String username;
+
+    public String getUsername() {
+        return username;
+    }
 
     public Client(Socket socket) {
         try {
@@ -54,6 +59,10 @@ public class Client implements Runnable  {
                     case WAITING_ROOM_UPDATE_USERNAMES:
                         ArrayList<ClientData> clientsData = GSON.fromJson(message.data, new TypeToken<ArrayList<ClientData>>(){}.getType());
                         App.UpdateWaitingRoomUserNames(clientsData);
+                    case QUESTION_DATA_RECEIVED:
+                        var questionData = GSON.fromJson(message.data, QuestionData.class);
+                        App.GoToQuestionPage(questionData.question, questionData.row, questionData.col, questionData.answers, this);
+                        break;
                     case IGNORE:
                         break;
                 }
