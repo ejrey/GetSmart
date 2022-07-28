@@ -15,12 +15,14 @@ import java.awt.event.ActionListener;
 public class QuestionPage implements ActionListener{
 
     JFrame questionFrame;
+    Client client;
 
-    public QuestionPage(String question, int row, int col, String[] answers) {
+    public QuestionPage(String question, int row, int col, String[] answers, Client client) {
 
         String frameName = "";
         String labelName = question;
         String[] buttonAnswers = formatAnswers(answers);
+        this.client = client;
 
         questionFrame = new JFrame(frameName);
 
@@ -106,7 +108,7 @@ public class QuestionPage implements ActionListener{
         }
     }
 
-    private void emptyFunction(AnswerData answerData, client){
+    private void emptyFunction(AnswerData answerData){
         client.SendMessageToServer(new Message(Message.Action.SEND_ANSWER_TO_SERVER, GSON.toJson(answerData)));
     }
 

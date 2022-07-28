@@ -55,7 +55,7 @@ public class Client implements Runnable  {
                         break;
                     case QUESTION_DATA_RECEIVED:
                         var questionData = GSON.fromJson(message.data, QuestionData.class);
-                        app.GoToQuestionPage(questionData.question, questionData.row, questionData.col, questionData.answers);
+                        app.GoToQuestionPage(questionData.question, questionData.row, questionData.col, questionData.answers, this);
                         break;
                     case IGNORE:
                         break;
