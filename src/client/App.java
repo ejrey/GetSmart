@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class App implements ActionListener {
 
@@ -18,6 +19,7 @@ public class App implements ActionListener {
     private static final App Instance = new App();
 
     JFrame titleScreen = new JFrame();
+    WaitingRoom waitingRoom;
     JTextField usernameField;
 
     public App() {
@@ -116,8 +118,15 @@ public class App implements ActionListener {
     // You can use "Instance." to access the original App instance.
     public static void GoToWaitingRoom() {
         SwingUtilities.invokeLater(() -> {
-            new WaitingRoom();
+            Instance.waitingRoom = new WaitingRoom();
             Instance.titleScreen.dispose();
+        });
+    }
+
+    public static void UpdateWaitingRoomUserNames(ArrayList<ClientData> clients) {
+        SwingUtilities.invokeLater(() -> {
+            if (Instance.waitingRoom != null)
+                Instance.waitingRoom.UpdateUsernames(clients);
         });
     }
 }

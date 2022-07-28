@@ -1,10 +1,12 @@
 package client;
 
+import com.google.gson.reflect.TypeToken;
 import middleware.ClientData;
 import middleware.Message;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 
 import static server.Server.GSON;
 
@@ -49,6 +51,9 @@ public class Client implements Runnable  {
                         username = clientData.username;
                         App.GoToWaitingRoom();
                         break;
+                    case WAITING_ROOM_UPDATE_USERNAMES:
+                        ArrayList<ClientData> clientsData = GSON.fromJson(message.data, new TypeToken<ArrayList<ClientData>>(){}.getType());
+                        App.UpdateWaitingRoomUserNames(clientsData);
                     case IGNORE:
                         break;
                 }
