@@ -61,7 +61,7 @@ public class Client implements Runnable  {
                         App.UpdateWaitingRoomUserNames(clientsData);
                     case QUESTION_DATA_RECEIVED:
                         var questionData = GSON.fromJson(message.data, QuestionData.class);
-                        app.GoToQuestionPage(questionData.question, questionData.row, questionData.col, questionData.answers, this);
+                        App.GoToQuestionPage(questionData.question, questionData.row, questionData.col, questionData.answers, this);
                         break;
                     case IGNORE:
                         break;

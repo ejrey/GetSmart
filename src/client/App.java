@@ -104,7 +104,7 @@ public class App implements ActionListener {
         } catch (IOException ignored) {}
     }
 
-    public void GoToQuestionPage(String question, int row, int col, String[] answers, Client client) {
+    public static void GoToQuestionPage(String question, int row, int col, String[] answers, Client client) {
         new QuestionPage(question, row, col, answers, client);
         //board.dispose(); talk to daniel and eric
     }
