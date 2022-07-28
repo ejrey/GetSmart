@@ -14,6 +14,11 @@ public class Client implements Runnable  {
     private Socket socket;
     private BufferedWriter bufferedWriter; // Used to write to the server
     private BufferedReader bufferedReader; // Used to read from the server
+
+    public String getUsername() {
+        return username;
+    }
+
     private String username;
 
     public Client(App app, Socket socket) {
