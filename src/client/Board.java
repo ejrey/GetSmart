@@ -3,8 +3,6 @@ package client;
 import middleware.ClientData;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -39,51 +37,12 @@ public class Board implements ActionListener {
         titlePanel.add(usernamePanel, BorderLayout.AFTER_LAST_LINE);
         usernamePanel.setLayout(new BoxLayout(usernamePanel, BoxLayout.Y_AXIS));
 
+
+        // ADDING A USERNAME
 //        usernameText = new JLabel("");
 //        usernameText.setFont(new Font("Verdana", Font.PLAIN, 20));
 //        mainPanel.add(usernamePanel);
 //        usernamePanel.add(usernameText);
-
-
-        // FOR DEBUGGING: to test and add 5 players
-//        JPanel playerOne = new JPanel();
-//        JPanel playerTwo = new JPanel();
-//        JPanel playerThree = new JPanel();
-//        JPanel playerFour = new JPanel();
-//        JPanel playerFive = new JPanel();
-//
-//        JLabel oneText = new JLabel("Ben: 0 |");
-//        oneText.setFont(new Font("Verdana", Font.PLAIN, 20));
-//        JLabel twoText = new JLabel("Matthew: 0 |");
-//        twoText.setFont(new Font("Verdana", Font.PLAIN, 20));
-//        JLabel threeText = new JLabel("Daniel: 0 |");
-//        threeText.setFont(new Font("Verdana", Font.PLAIN, 20));
-//        JLabel fourText = new JLabel("Randy: 0 |");
-//        fourText.setFont(new Font("Verdana", Font.PLAIN, 20));
-//        JLabel fiveText = new JLabel("Eric: 0 |");
-//        fiveText.setFont(new Font("Verdana", Font.PLAIN, 20));
-//
-//        usernamePanel.add(playerOne);
-//        usernamePanel.add(playerTwo);
-//        usernamePanel.add(playerThree);
-//        usernamePanel.add(playerFour);
-//        usernamePanel.add(playerFive);
-//
-//        playerOne.add(oneText);
-//        playerTwo.add(twoText);
-//        playerThree.add(threeText);
-//        playerFour.add(fourText);
-//        playerFive.add(fiveText);
-
-        //FOR DEBUGGING: To test and add 100 players
-//        for (int i = 0; i < 100; i++) {
-//            JPanel player = new JPanel();
-//            JLabel text = new JLabel("" + i);
-//            text.setFont(new Font("Verdana", Font.PLAIN, 20));
-//            usernamePanel.add(player);
-//            player.add(text);
-//        }
-
 
         //Board Components
         JPanel boardPanel = new JPanel(new GridBagLayout());
@@ -114,13 +73,11 @@ public class Board implements ActionListener {
     private void addColumnToBoardPanel(JPanel boardPanel, JPanel column, int columnNumber) {
 //        boardPanel.setLayout(new BoxLayout(boardPanel, BoxLayout.X_AXIS));
 
-
         // Column Name
         JLabel columnTitle = new JLabel("Col " + columnNumber);
         columnTitle.setFont(new Font("Verdana", Font.PLAIN, 20));
         columnTitle.setHorizontalAlignment(JLabel.CENTER);
         column.add(columnTitle);
-
 
         // Assigning buttons onto columns
         int pointValue = 100;
