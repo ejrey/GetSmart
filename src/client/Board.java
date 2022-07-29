@@ -12,10 +12,11 @@ public class Board implements ActionListener {
 
     JFrame mainFrame = new JFrame();
     JLabel usernameText;
+    JPanel boardPanel = new JPanel(new GridBagLayout());
 
     public Board(ArrayList<ClientData> clientsData) {
         // TODO: Remove, just testing.
-        clientsData.forEach((clientData -> System.out.println(clientData.username)));
+//        clientsData.forEach((clientData -> System.out.println(clientData.username)));
 
         mainFrame.setSize(1280, 720);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -38,17 +39,21 @@ public class Board implements ActionListener {
 
         JPanel usernamePanel = new JPanel();
         titlePanel.add(usernamePanel, BorderLayout.AFTER_LAST_LINE);
-        usernamePanel.setLayout(new BoxLayout(usernamePanel, BoxLayout.Y_AXIS));
+//        usernamePanel.setLayout(new BoxLayout(usernamePanel, BoxLayout.Y_AXIS));
 
 
         // ADDING A USERNAME
-//        usernameText = new JLabel("");
-//        usernameText.setFont(new Font("Verdana", Font.PLAIN, 20));
-//        mainPanel.add(usernamePanel);
-//        usernamePanel.add(usernameText);
+        for (int i = 0; i < clientsData.size(); i++) {
+            JLabel usernameText = new JLabel(clientsData.get(i).username);
+            usernameText.setFont(new Font("Verdana", Font.PLAIN, 40));
+            JPanel player = new JPanel();
+            usernamePanel.add(player);
+            player.add(usernameText);
+        }
+        mainPanel.add(usernamePanel);
 
         //Board Components
-        JPanel boardPanel = new JPanel(new GridBagLayout());
+//        JPanel boardPanel = new JPanel(new GridBagLayout());
         JPanel colOne = new JPanel();
         JPanel colTwo = new JPanel();
         JPanel colThree = new JPanel();
@@ -71,6 +76,9 @@ public class Board implements ActionListener {
         addColumnToBoardPanel(boardPanel, colSix, 6);
 
         mainPanel.add(boardPanel);
+
+
+
     }
 
     private void addColumnToBoardPanel(JPanel boardPanel, JPanel column, int columnNumber) {
@@ -126,6 +134,16 @@ public class Board implements ActionListener {
 
         System.out.println("Col = " + col + " Row = " + row);
         System.out.println(e.getActionCommand());
+
+
+        // Setting background for specific button example
+//        Component component = (Component) e.getSource();
+//        component.setBackground(Color.red);
+
+        // Setting the button to be unclickable if guessed correctly.
+//        component.setEnabled(false);
+
 //        App.GoToQuestionPage("hello", row, col, "HELLO", Client.this);
+
     }
 }
