@@ -1,6 +1,7 @@
 package server;
 
 import com.google.gson.Gson;
+import middleware.ClientData;
 import middleware.Message;
 
 import java.io.IOException;
@@ -63,6 +64,16 @@ public class Server {
                 break;
             }
         }
+    }
+
+    public static ArrayList<ClientData> GetClientsData() {
+        var clientsData = new ArrayList<ClientData>();
+        ConnectedClients.forEach((clientConnection -> {
+            var data = new ClientData();
+            data.username = clientConnection.username;
+            clientsData.add(data);
+        }));
+        return clientsData;
     }
 
     private void Close() {

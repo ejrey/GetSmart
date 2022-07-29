@@ -45,13 +45,10 @@ public class ClientConnection implements Runnable {
                         username = clientData.username;
                         To(username, new Message(Message.Action.SEND_TO_WAITING_ROOM, GSON.toJson(clientData)));
 
-                        var clientsData = new ArrayList<ClientData>();
-                        ConnectedClients.forEach((clientConnection -> {
-                            var data = new ClientData();
-                            data.username = clientConnection.username;
-                            clientsData.add(data);
-                        }));
-                        Broadcast(new Message(Message.Action.WAITING_ROOM_UPDATE_USERNAMES, GSON.toJson(clientsData)));
+                        Broadcast(new Message(Message.Action.WAITING_ROOM_UPDATE_USERNAMES, GSON.toJson(Server.GetClientsData())));
+                        break;
+                    case SEND_TO_BOARD:
+                        Broadcast(new Message(Message.Action.SEND_TO_BOARD, GSON.toJson(Server.GetClientsData())));
                         break;
                     case IGNORE:
                         break;

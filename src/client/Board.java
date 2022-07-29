@@ -13,7 +13,10 @@ public class Board implements ActionListener {
     JFrame mainFrame = new JFrame();
     JLabel usernameText;
 
-    public Board() {
+    public Board(ArrayList<ClientData> clientsData) {
+        // TODO: Remove, just testing.
+        clientsData.forEach((clientData -> System.out.println(clientData.username)));
+
         mainFrame.setSize(1280, 720);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setVisible(true);
