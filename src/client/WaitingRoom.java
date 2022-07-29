@@ -64,7 +64,7 @@ public class WaitingRoom implements ActionListener {
     }
 
     public void StartGame() {
-        Client.Instance.SendMessageToServer(new Message(Message.Action.SEND_TO_BOARD, ""));
+        Client.Instance.SendMessageToServer(new Message(Message.Action.START_GAME, ""));
     }
 
     public void Dispose() {
