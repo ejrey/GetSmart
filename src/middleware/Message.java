@@ -6,6 +6,12 @@ public class Message {
         SET_USERNAME, // ClientData
         SEND_TO_WAITING_ROOM, // ClientData
         WAITING_ROOM_UPDATE_USERNAMES, // ArrayList of ClientData
+        REQUEST_QUESTION_COLUMNS,
+        SEND_TO_QUESTION_BOARD, //Server-To-Client, sent once to set up question board's column names.
+
+        GET_QUESTION, //Client-to-Server, used when client clicks a question button. invokes SEND_TO_QUESTION_PAGE
+        SEND_TO_QUESTION_PAGE, //Server-To-Client, sent once to set up question page with one question's Data.
+
     }
 
     public Action action;

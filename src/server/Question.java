@@ -12,10 +12,19 @@ public class Question {
     private String currentAnswerer = ""; //When false, one process may get this question's info.
     //When true, no thread may get this question's info
 
+
+    public Question(int row, int column, String question, String[] answers, String correctAnswer) {
+        this.row = row;
+        this.column = column;
+        this.question = question;
+        this.answers = answers;
+        this.correctAnswer = correctAnswer;
+    }
+
     //tryGetQuestion
     //if this thread has this question's lock or no one does, return the question
     public String tryGetQuestion(String threadId) {
-        if(currentAnswerer.equals(threadId)|| currentAnswerer.equals("")){
+        if(currentAnswerer.equals(threadId) || currentAnswerer.equals("")){
             currentAnswerer = threadId;
             Gson gson = new Gson();
             String json = gson.toJson(this);
