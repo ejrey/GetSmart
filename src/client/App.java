@@ -10,15 +10,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class App implements ActionListener {
 
-    public static void main(String[] args) {
-        new App();
-    }
+    public static void main(String[] args) {}
     public static final Gson GSON = new Gson();
+    private static final App Instance = new App();
 
     JFrame titleScreen = new JFrame();
+    WaitingRoom waitingRoom;
     JTextField usernameField;
 
     public App() {
@@ -40,31 +41,38 @@ public class App implements ActionListener {
 
         // Mid-Section with Username/Port Number Selection
         JPanel usernamePanel = new JPanel();
+        JPanel ipPanel = new JPanel();
         JPanel portPanel = new JPanel();
-
         mainPanel.add(usernamePanel);
+        mainPanel.add(ipPanel);
         mainPanel.add(portPanel);
-
         mainPanel.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
-        //midPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+
         JLabel nameLabel = new JLabel("Enter a username:    ");
         usernameField = new JTextField(50);
-
         usernamePanel.add(nameLabel);
         usernamePanel.add(usernameField);
         usernamePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        JLabel portLabel = new JLabel("Enter a port number to the server    :    ");
+        JLabel ipLabel = new JLabel("Enter an IP address to the server:    ");
+        JTextField ipField = new JTextField(50);
+        ipPanel.add(ipLabel);
+        ipPanel.add(ipField);
+        ipPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        JLabel portLabel = new JLabel("Enter a port number to the server:    ");
         JTextField namePortField = new JTextField(10);
         portPanel.add(portLabel);
         portPanel.add(namePortField);
         portPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         usernamePanel.setLayout(new BoxLayout(usernamePanel, BoxLayout.X_AXIS));
+        ipPanel.setLayout(new BoxLayout(ipPanel, BoxLayout.X_AXIS));
         portPanel.setLayout(new BoxLayout(portPanel, BoxLayout.X_AXIS));
 
         usernameField.setMaximumSize(new Dimension(250, 25));
-        namePortField.setMaximumSize(new Dimension(150, 25));
+        ipField.setMaximumSize(new Dimension(165, 25));
+        namePortField.setMaximumSize(new Dimension(162, 25));
 
         // Bot-Section with start button
         JPanel botPanel = new JPanel();
@@ -84,16 +92,10 @@ public class App implements ActionListener {
         titleScreen.setVisible(true);
     }
 
-    // TODO: This should go to the waiting room instead of the Board();
-    public void GoToWaitingRoom() {
-        new Board();
-        titleScreen.dispose();
-    }
-
     private void LoginToServer() {
         try {
             var socket = new Socket("localhost", 3000);
-            var client = new Client(this, socket);
+            var client = new Client(socket);
             var clientData = new ClientData();
             clientData.username = usernameField.getText();
             client.SendMessageToServer(new Message(Message.Action.SET_USERNAME, GSON.toJson(clientData)));
@@ -109,5 +111,22 @@ public class App implements ActionListener {
         } else if (e.getActionCommand().equals("Exit")) {
             System.exit(0);
         }
+    }
+
+    // TODO: We should put every type of screen inside of this single class.
+    // If you want to call any UI change, it needs to be inside of "SwingUtilities.invokeLater"!
+    // You can use "Instance." to access the original App instance.
+    public static void GoToWaitingRoom() {
+        SwingUtilities.invokeLater(() -> {
+            Instance.waitingRoom = new WaitingRoom();
+            Instance.titleScreen.dispose();
+        });
+    }
+
+    public static void UpdateWaitingRoomUserNames(ArrayList<ClientData> clients) {
+        SwingUtilities.invokeLater(() -> {
+            if (Instance.waitingRoom != null)
+                Instance.waitingRoom.UpdateUsernames(clients);
+        });
     }
 }

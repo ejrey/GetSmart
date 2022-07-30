@@ -5,6 +5,7 @@ import middleware.Message;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 
 import static server.Server.*;
 
@@ -40,8 +41,17 @@ public class ClientConnection implements Runnable {
                 switch (message.action) {
                     case SET_USERNAME:
                         var clientData = GSON.fromJson(message.data, ClientData.class);
+
                         username = clientData.username;
                         To(username, new Message(Message.Action.SEND_TO_WAITING_ROOM, GSON.toJson(clientData)));
+
+                        var clientsData = new ArrayList<ClientData>();
+                        ConnectedClients.forEach((clientConnection -> {
+                            var data = new ClientData();
+                            data.username = clientConnection.username;
+                            clientsData.add(data);
+                        }));
+                        Broadcast(new Message(Message.Action.WAITING_ROOM_UPDATE_USERNAMES, GSON.toJson(clientsData)));
                         break;
                     case IGNORE:
                         break;
