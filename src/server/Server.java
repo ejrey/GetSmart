@@ -10,6 +10,7 @@ import java.util.ArrayList;
 public class Server {
     public static final Gson GSON = new Gson();
     public static ArrayList<ClientConnection> ConnectedClients = new ArrayList<>();
+    public Questions Questions = new Questions(5,6);
 
     private final ServerSocket serverSocket;
 
@@ -24,10 +25,13 @@ public class Server {
     }
 
     public void Start() {
+        //initialize Questions.
+        //this.Questions.getQuestion(1,2);
+        this.Questions.initializeQuestions();
         try {
             while (!serverSocket.isClosed()) {
                 var socket = serverSocket.accept();
-                var clientConnection = new ClientConnection(socket);
+                var clientConnection = new ClientConnection(socket,Questions);
 
                 var thread = new Thread(clientConnection);
                 thread.start();
@@ -65,6 +69,7 @@ public class Server {
         }
     }
 
+//The concept of a question from the server
     private void Close() {
         try {
             if (serverSocket != null) {

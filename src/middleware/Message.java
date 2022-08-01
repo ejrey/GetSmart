@@ -8,7 +8,13 @@ public class Message {
         SEND_TO_WAITING_ROOM, // ClientData json object
         SEND_ANSWER_TO_SERVER,
         REQUEST_SERVER_FOR_QUESTION_INFO,
-        QUESTION_DATA_RECEIVED // From server to client, client should render question page from body data
+        QUESTION_DATA_RECEIVED, // From server to client, client should render question page from body data
+        REQUEST_QUESTION_COLUMNS,
+        SEND_TO_QUESTION_BOARD, //Server-To-Client, sent once to set up question board's column names.
+
+        GET_QUESTION, //Client-to-Server, used when client clicks a question button. invokes SEND_TO_QUESTION_PAGE
+        SEND_TO_QUESTION_PAGE, //Server-To-Client, sent once to set up question page with one question's Data.
+
     }
 
     public Action action;
