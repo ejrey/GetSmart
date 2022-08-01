@@ -16,8 +16,10 @@ public class ClientConnection implements Runnable {
     public BufferedReader bufferedReader; // Used to read data from the client
     public String username;
     private Socket socket;
+    public Questions Questions;
 
-    public ClientConnection(Socket socket) {
+    public ClientConnection(Socket socket, Questions qs) {
+        this.Questions = qs;
         try {
             this.socket = socket;
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -49,6 +51,18 @@ public class ClientConnection implements Runnable {
                         break;
                     case START_GAME:
                         Broadcast(new Message(Message.Action.SEND_TO_BOARD, GSON.toJson(Server.GetClientsData())));
+                        break;
+                    case GET_QUESTION:
+                        //this query from the client passes in an int array of the column then the row of a desired question
+                        //The response to the client is a Question object.
+                        var rowAndColumn = GSON.fromJson(message.data, Integer[].class);
+                        To(username, new Message(Message.Action.SEND_TO_QUESTION_PAGE, GSON.toJson(Questions.getQuestion(rowAndColumn[0],rowAndColumn[1]))));
+
+                    case REQUEST_QUESTION_COLUMNS:
+                        To(username, new Message(Message.Action.SEND_TO_QUESTION_BOARD, GSON.toJson(new String[]{
+                                "Column1", "Column2", "Column3", "Column4", "Column5", "Column6",
+                    }
+                    )));
                         break;
                     case IGNORE:
                         break;
