@@ -20,6 +20,7 @@ public class App implements ActionListener {
 
     JFrame titleScreen = new JFrame();
     WaitingRoom waitingRoom;
+    Board board;
     JTextField usernameField;
 
     public App() {
@@ -125,6 +126,13 @@ public class App implements ActionListener {
         SwingUtilities.invokeLater(() -> {
             Instance.waitingRoom = new WaitingRoom();
             Instance.titleScreen.dispose();
+        });
+    }
+
+    public static void GoToBoard(ArrayList<ClientData> clientsData) {
+        SwingUtilities.invokeLater(() -> {
+            Instance.board = new Board(clientsData);
+            Instance.waitingRoom.Dispose();
         });
     }
 

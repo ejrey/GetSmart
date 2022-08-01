@@ -3,9 +3,16 @@ package middleware;
 public class Message {
     public enum Action {
         IGNORE, // empty string
+        SET_USERNAME, // ClientData
+        SEND_TO_WAITING_ROOM, // ClientData
         WAITING_ROOM_UPDATE_USERNAMES, // ArrayList of ClientData
-        SET_USERNAME, // ClientData json object
-        SEND_TO_WAITING_ROOM, // ClientData json object
+        REQUEST_QUESTION_COLUMNS,
+        SEND_TO_QUESTION_BOARD, //Server-To-Client, sent once to set up question board's column names.
+
+        GET_QUESTION, //Client-to-Server, used when client clicks a question button. invokes SEND_TO_QUESTION_PAGE
+        SEND_TO_QUESTION_PAGE, //Server-To-Client, sent once to set up question page with one question's Data.
+        SEND_TO_BOARD, // ArrayList of ClientData
+        START_GAME, // empty
         SEND_ANSWER_TO_SERVER,
         REQUEST_SERVER_FOR_QUESTION_INFO,
         QUESTION_DATA_RECEIVED // From server to client, client should render question page from body data
