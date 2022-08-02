@@ -55,8 +55,12 @@ public class ClientConnection implements Runnable {
                     case GET_QUESTION:
                         //this query from the client passes in an int array of the column then the row of a desired question
                         //The response to the client is a Question object.
-                        var rowAndColumn = GSON.fromJson(message.data, Integer[].class);
-                        To(username, new Message(Message.Action.SEND_TO_QUESTION_PAGE, GSON.toJson(Questions.getQuestion(rowAndColumn[0],rowAndColumn[1]))));
+                        System.out.println(message.data);
+                        var rowAndColumn = GSON.fromJson(message.data, int[].class);
+                        var questions = new Questions(6,5);
+                        Question q = questions.getQuestion(rowAndColumn[0],rowAndColumn[1]);
+                        System.out.println(q);
+                        To(username, new Message(Message.Action.QUESTION_DATA_RECEIVED, GSON.toJson(q)));
 
                     case REQUEST_QUESTION_COLUMNS:
                         To(username, new Message(Message.Action.SEND_TO_QUESTION_BOARD, GSON.toJson(new String[]{

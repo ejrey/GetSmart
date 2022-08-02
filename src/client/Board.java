@@ -1,11 +1,14 @@
 package client;
 
+import com.google.gson.Gson;
 import middleware.ClientData;
+import middleware.Message;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Board implements ActionListener {
@@ -14,9 +17,12 @@ public class Board implements ActionListener {
     JLabel usernameText;
     JPanel boardPanel = new JPanel(new GridBagLayout());
 
+    public static final Gson GSON = new Gson();
+
     public Board(ArrayList<ClientData> clientsData) {
         // TODO: Remove, just testing.
 //        clientsData.forEach((clientData -> System.out.println(clientData.username)));
+
 
         mainFrame.setSize(1280, 720);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -132,8 +138,12 @@ public class Board implements ActionListener {
         int col = Integer.parseInt(String.valueOf(buttonPressed.charAt(0))) - 1;
         int row = Integer.parseInt(String.valueOf(buttonPressed.charAt(2))) - 1;
 
+        int coordinates[] = {col,row};
+
         System.out.println("Col = " + col + " Row = " + row);
         System.out.println(e.getActionCommand());
+
+        Client.Instance.SendMessageToServer(new Message(Message.Action.GET_QUESTION, GSON.toJson(coordinates)));
 
 
         // Setting background for specific button example
