@@ -3,6 +3,7 @@ package client;
 import com.google.gson.reflect.TypeToken;
 import middleware.ClientData;
 import middleware.Message;
+import middleware.QuestionData;
 
 import java.io.*;
 import java.net.Socket;
@@ -11,12 +12,18 @@ import java.util.ArrayList;
 import static server.Server.GSON;
 
 public class Client implements Runnable  {
+    public static Client Instance;
     private Socket socket;
     private BufferedWriter bufferedWriter; // Used to write to the server
     private BufferedReader bufferedReader; // Used to read from the server
     private String username;
 
+    public String getUsername() {
+        return username;
+    }
+
     public Client(Socket socket) {
+        Instance = this;
         try {
             this.socket = socket;
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -51,9 +58,23 @@ public class Client implements Runnable  {
                         username = clientData.username;
                         App.GoToWaitingRoom();
                         break;
+                    case SEND_TO_BOARD:
+                        ArrayList<ClientData> boardClientData = GSON.fromJson(message.data, new TypeToken<ArrayList<ClientData>>(){}.getType());
+                        App.GoToBoard(boardClientData);
+                        break;
                     case WAITING_ROOM_UPDATE_USERNAMES:
-                        ArrayList<ClientData> clientsData = GSON.fromJson(message.data, new TypeToken<ArrayList<ClientData>>(){}.getType());
-                        App.UpdateWaitingRoomUserNames(clientsData);
+                        ArrayList<ClientData> waitingClientData = GSON.fromJson(message.data, new TypeToken<ArrayList<ClientData>>(){}.getType());
+                        App.UpdateWaitingRoomUserNames(waitingClientData);
+                        break;
+                    case QUESTION_DATA_RECEIVED:
+                        var questionData = GSON.fromJson(message.data, QuestionData.class);
+                        System.out.println(questionData);
+                        App.GoToQuestionPage(questionData.question, questionData.row, questionData.col, questionData.answers, this);
+                        break;
+                    case UPDATE_BOARD:
+                        // Re-render the jeopardy board and people scores
+                        // button status, usernames and score
+                        break;
                     case IGNORE:
                         break;
                 }

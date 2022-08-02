@@ -20,6 +20,7 @@ public class App implements ActionListener {
 
     JFrame titleScreen = new JFrame();
     WaitingRoom waitingRoom;
+    Board board;
     JTextField usernameField;
 
     public App() {
@@ -104,6 +105,11 @@ public class App implements ActionListener {
         } catch (IOException ignored) {}
     }
 
+    public static void GoToQuestionPage(String question, int row, int col, String[] answers, Client client) {
+        new QuestionPage(question, row, col, answers, client);
+        //board.dispose(); talk to daniel and eric
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("Start")) {
@@ -120,6 +126,13 @@ public class App implements ActionListener {
         SwingUtilities.invokeLater(() -> {
             Instance.waitingRoom = new WaitingRoom();
             Instance.titleScreen.dispose();
+        });
+    }
+
+    public static void GoToBoard(ArrayList<ClientData> clientsData) {
+        SwingUtilities.invokeLater(() -> {
+            Instance.board = new Board(clientsData);
+            Instance.waitingRoom.Dispose();
         });
     }
 

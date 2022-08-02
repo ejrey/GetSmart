@@ -4,17 +4,38 @@
 
 package client;
 
+import com.google.gson.Gson;
+import middleware.AnswerData;
+import middleware.Message;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class QuestionPage {
+public class QuestionPage implements ActionListener{
 
-    public QuestionPage(String question, String questionNumber, String[] answers) {
-        String frameName = questionNumber;
-        String labelName = question;
-        String[] buttonAnswers = formatAnswers(answers);
+    public static final Gson GSON = new Gson();
 
-        JFrame questionFrame = new JFrame(frameName);
+    JFrame questionFrame;
+    Client client;
+    String frameName;
+    String labelName;
+    String[] buttonAnswers;
+    int row;
+    int col;
+
+    public QuestionPage(String question, int row, int col, String[] answers, Client client) {
+
+        frameName = "";
+        labelName = question;
+        buttonAnswers = formatAnswers(answers);
+        this.client = client;
+        this.row = row;
+        this.col = col;
+
+        questionFrame = new JFrame(frameName);
+
         questionFrame.setSize(1280, 720);
 
         JPanel mainPanel = new JPanel();
@@ -36,7 +57,7 @@ public class QuestionPage {
 
         for(int i = 0; i<buttonAnswers.length; i++){
             String number = Integer.toString(i+1);
-            createAnswerPanel(questionAnswerPanel, buttonAnswers, number, i);
+                createAnswerPanel(questionAnswerPanel, buttonAnswers, number, i);
         }
 
         questionAnswerPanel.setSize(200, 100);
@@ -48,6 +69,7 @@ public class QuestionPage {
         answerPanel.setLayout((new BoxLayout(answerPanel, BoxLayout.X_AXIS)));
         answerPanel.setBorder(BorderFactory.createEmptyBorder(25, 10, 25, 10));
         JButton button = new JButton(s);
+        button.addActionListener(this);
         JLabel answer = new JLabel(buttonAnswers[i]);
         answer.setMaximumSize(new Dimension(800, 25));
         answerPanel.add(button);
@@ -75,7 +97,32 @@ public class QuestionPage {
 
 //    public static void main(String[] args){
 //        String[] arr = new String[]{"Yo", "Hi", "Sup", "Hey"};
-//        new QuestionPage("Question here", "1", arr);
+//        new QuestionPage("Question here", 1, 1, arr);
 //    }
+
+    @Override
+    public void actionPerformed(ActionEvent e){
+        if (e.getActionCommand().equals("1")){
+            questionFrame.dispose();
+            var answerData = new AnswerData("1", row, col, client.getUsername());
+            emptyFunction(answerData);
+        } else if (e.getActionCommand().equals("2")){
+            questionFrame.dispose();
+            var answerData = new AnswerData("2", row, col, client.getUsername());
+            emptyFunction(answerData);
+        } else if (e.getActionCommand().equals("3")){
+            questionFrame.dispose();
+            var answerData = new AnswerData("3", row, col, client.getUsername());
+            emptyFunction(answerData);
+        } else if (e.getActionCommand().equals("4")){
+            questionFrame.dispose();
+            var answerData = new AnswerData("4", row, col, client.getUsername());
+            emptyFunction(answerData);
+        }
+    }
+
+    private void emptyFunction(AnswerData answerData){
+        client.SendMessageToServer(new Message(Message.Action.SEND_ANSWER_TO_SERVER, GSON.toJson(answerData)));
+    }
 
 }

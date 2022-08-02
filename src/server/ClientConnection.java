@@ -16,8 +16,10 @@ public class ClientConnection implements Runnable {
     public BufferedReader bufferedReader; // Used to read data from the client
     public String username;
     private Socket socket;
+    public Questions Questions;
 
-    public ClientConnection(Socket socket) {
+    public ClientConnection(Socket socket, Questions qs) {
+        this.Questions = qs;
         try {
             this.socket = socket;
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -45,13 +47,26 @@ public class ClientConnection implements Runnable {
                         username = clientData.username;
                         To(username, new Message(Message.Action.SEND_TO_WAITING_ROOM, GSON.toJson(clientData)));
 
-                        var clientsData = new ArrayList<ClientData>();
-                        ConnectedClients.forEach((clientConnection -> {
-                            var data = new ClientData();
-                            data.username = clientConnection.username;
-                            clientsData.add(data);
-                        }));
-                        Broadcast(new Message(Message.Action.WAITING_ROOM_UPDATE_USERNAMES, GSON.toJson(clientsData)));
+                        Broadcast(new Message(Message.Action.WAITING_ROOM_UPDATE_USERNAMES, GSON.toJson(Server.GetClientsData())));
+                        break;
+                    case START_GAME:
+                        Broadcast(new Message(Message.Action.SEND_TO_BOARD, GSON.toJson(Server.GetClientsData())));
+                        break;
+                    case GET_QUESTION:
+                        //this query from the client passes in an int array of the column then the row of a desired question
+                        //The response to the client is a Question object.
+                        System.out.println(message.data);
+                        var rowAndColumn = GSON.fromJson(message.data, int[].class);
+                        var questions = new Questions(6,5);
+                        Question q = questions.getQuestion(rowAndColumn[0],rowAndColumn[1]);
+                        System.out.println(q);
+                        To(username, new Message(Message.Action.QUESTION_DATA_RECEIVED, GSON.toJson(q)));
+
+                    case REQUEST_QUESTION_COLUMNS:
+                        To(username, new Message(Message.Action.SEND_TO_QUESTION_BOARD, GSON.toJson(new String[]{
+                                "Column1", "Column2", "Column3", "Column4", "Column5", "Column6",
+                    }
+                    )));
                         break;
                     case IGNORE:
                         break;
