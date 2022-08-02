@@ -1,6 +1,7 @@
 package server;
 
 import com.google.gson.Gson;
+import middleware.BoardData;
 import middleware.ClientData;
 import middleware.Message;
 
@@ -11,7 +12,8 @@ import java.util.ArrayList;
 public class Server {
     public static final Gson GSON = new Gson();
     public static ArrayList<ClientConnection> ConnectedClients = new ArrayList<>();
-    public Questions Questions = new Questions(5,6);
+    public static Questions Questions = new Questions(5,6);
+    public static BoardData BoardData = new BoardData();
 
     private final ServerSocket serverSocket;
 
@@ -26,9 +28,7 @@ public class Server {
     }
 
     public void Start() {
-        //initialize Questions.
-        //this.Questions.getQuestion(1,2);
-//        this.Questions.initializeQuestions();
+
         try {
             while (!serverSocket.isClosed()) {
                 var socket = serverSocket.accept();
@@ -75,6 +75,7 @@ public class Server {
         ConnectedClients.forEach((clientConnection -> {
             var data = new ClientData();
             data.username = clientConnection.username;
+            data.score = clientConnection.score;
             clientsData.add(data);
         }));
         return clientsData;

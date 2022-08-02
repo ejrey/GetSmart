@@ -1,5 +1,6 @@
 package server;
 
+import middleware.BoardData;
 import middleware.ClientData;
 import middleware.Message;
 
@@ -15,6 +16,7 @@ public class ClientConnection implements Runnable {
     public BufferedWriter bufferedWriter; // Used to write to the client
     public BufferedReader bufferedReader; // Used to read data from the client
     public String username;
+    public Integer score;
     private Socket socket;
     public Questions Questions;
 
@@ -60,8 +62,14 @@ public class ClientConnection implements Runnable {
                         var questions = new Questions(6,5);
                         Question q = questions.getQuestion(rowAndColumn[0],rowAndColumn[1]);
                         System.out.println(q);
-                        To(username, new Message(Message.Action.QUESTION_DATA_RECEIVED, GSON.toJson(q)));
 
+                        if (BoardData.buttonStates[rowAndColumn[0]][rowAndColumn[1]] != middleware.BoardData.ButtonState.UNLOCKED) {
+                            To(username, new Message(Message.Action.QUESTION_DATA_RECEIVED, GSON.toJson(q)));
+
+                            BoardData.buttonStates[rowAndColumn[0]][rowAndColumn[1]] = middleware.BoardData.ButtonState.LOCKED;
+                            Broadcast(new Message(Message.Action.UPDATE_BOARD, GSON.toJson(BoardData)));
+                        }
+                        break;
                     case REQUEST_QUESTION_COLUMNS:
                         To(username, new Message(Message.Action.SEND_TO_QUESTION_BOARD, GSON.toJson(new String[]{
                                 "Column1", "Column2", "Column3", "Column4", "Column5", "Column6",
