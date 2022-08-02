@@ -1,6 +1,7 @@
 package client;
 
 import com.google.gson.Gson;
+import middleware.BoardData;
 import middleware.ClientData;
 import middleware.Message;
 
@@ -16,13 +17,13 @@ public class Board implements ActionListener {
     JFrame mainFrame = new JFrame();
     JLabel usernameText;
     JPanel boardPanel = new JPanel(new GridBagLayout());
+    ArrayList<JButton> buttons = new ArrayList<>();
 
     public static final Gson GSON = new Gson();
 
     public Board(ArrayList<ClientData> clientsData) {
         // TODO: Remove, just testing.
 //        clientsData.forEach((clientData -> System.out.println(clientData.username)));
-
 
         mainFrame.setSize(1280, 720);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -83,8 +84,6 @@ public class Board implements ActionListener {
 
         mainPanel.add(boardPanel);
 
-
-
     }
 
     private void addColumnToBoardPanel(JPanel boardPanel, JPanel column, int columnNumber) {
@@ -114,12 +113,33 @@ public class Board implements ActionListener {
 //            buttonQuestion.setBorder(BorderFactory.createCompoundBorder(
 //                    BorderFactory.createLineBorder(Color.DARK_GRAY, 10),
 //                    BorderFactory.createEmptyBorder(0, 50, 0, 50)));
+
             column.add(buttonQuestion);
+            buttons.add(buttonQuestion);
             buttonQuestion.addActionListener((ActionListener) this);
         }
 
         column.setLayout(new BoxLayout(column, BoxLayout.Y_AXIS));
 
+    }
+
+    public void updateButtonStates(BoardData boardData) {
+        BoardData.ButtonState[][] buttonStates = boardData.buttonStates;
+        System.out.println("COL = " + boardData.getColumn());
+        System.out.println("ROW "  + boardData.getRow());
+
+        int chosenColumn = boardData.getColumn() + 1;
+        int chosenRow = (boardData.getRow() + 1) * 100;
+
+        String buttonChosen = "" + chosenColumn + "-" + chosenRow;
+
+        for (int i = 0; i < buttons.size(); i++) {
+            if (buttons.get(i).getActionCommand().equals(buttonChosen)) {
+                Component component = buttons.get(i);
+                component.setBackground(Color.RED);
+                component.setEnabled(false);
+            }
+        }
     }
 
     public void UpdateBoardUsernames(ArrayList<ClientData> clients) {
@@ -148,6 +168,7 @@ public class Board implements ActionListener {
 
         // Setting background for specific button example
 //        Component component = (Component) e.getSource();
+//
 //        component.setBackground(Color.red);
 
         // Setting the button to be unclickable if guessed correctly.

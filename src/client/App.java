@@ -1,6 +1,7 @@
 package client;
 
 import com.google.gson.Gson;
+import middleware.BoardData;
 import middleware.ClientData;
 import middleware.Message;
 
@@ -133,6 +134,12 @@ public class App implements ActionListener {
         SwingUtilities.invokeLater(() -> {
             Instance.board = new Board(clientsData);
             Instance.waitingRoom.Dispose();
+        });
+    }
+
+    public static void UpdateBoardButtons(BoardData boardData) {
+        SwingUtilities.invokeLater(() -> {
+            Instance.board.updateButtonStates(boardData);
         });
     }
 

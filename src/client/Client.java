@@ -69,12 +69,14 @@ public class Client implements Runnable  {
                         break;
                     case QUESTION_DATA_RECEIVED:
                         var questionData = GSON.fromJson(message.data, QuestionData.class);
-                        System.out.println(questionData);
                         App.GoToQuestionPage(questionData.question, questionData.row, questionData.col, questionData.answers, this);
                         break;
                     case UPDATE_BOARD:
                         // Listen to whenever the server tells us to update this board.
                         var boardData = GSON.fromJson(message.data, BoardData.class);
+                        App.UpdateBoardButtons(boardData);
+
+
                         // Re-render the jeopardy board and people scores
                         // button status, usernames and score
                         break;
