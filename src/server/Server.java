@@ -28,7 +28,7 @@ public class Server {
     public void Start() {
         //initialize Questions.
         //this.Questions.getQuestion(1,2);
-        this.Questions.initializeQuestions();
+//        this.Questions.initializeQuestions();
         try {
             while (!serverSocket.isClosed()) {
                 var socket = serverSocket.accept();

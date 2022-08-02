@@ -11,11 +11,11 @@ public class Message {
 
         GET_QUESTION, //Client-to-Server, used when client clicks a question button. invokes SEND_TO_QUESTION_PAGE
         SEND_TO_QUESTION_PAGE, //Server-To-Client, sent once to set up question page with one question's Data.
-        SEND_TO_BOARD, // ArrayList of ClientData
+        SEND_TO_BOARD, // ArrayList of ClientData of usernames
         START_GAME, // empty
         SEND_ANSWER_TO_SERVER,
-        REQUEST_SERVER_FOR_QUESTION_INFO,
-        QUESTION_DATA_RECEIVED // From server to client, client should render question page from body data
+        QUESTION_DATA_RECEIVED, // From server to client, client should render question page from body data
+        UPDATE_BOARD // From server to client, client should rerender button states and scores
     }
 
     public Action action;
@@ -40,7 +40,7 @@ public class Message {
 
         // Hopefully this doesn't mess with JSON, but we want to clean up any weird whitespace.
         var actionParsed = split[0].replaceAll("\\s|\\r|\\n","");
-        var messageParsed = split[1].replaceAll("\\s|\\r|\\n","");
+        var messageParsed = split[1];
 
         message.action = Action.valueOf(actionParsed);
         message.data = messageParsed;
