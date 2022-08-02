@@ -137,9 +137,15 @@ public class App implements ActionListener {
         });
     }
 
-    public static void UpdateBoardButtons(BoardData boardData) {
+    public static void SetBoardInvisible() {
         SwingUtilities.invokeLater(() -> {
-            Instance.board.updateButtonStates(boardData);
+            Instance.board.hideBoard();
+        });
+    }
+
+    public static void setButtonOnBoardToState(BoardData boardData) {
+        SwingUtilities.invokeLater(() -> {
+            Instance.board.handleButtonCase(boardData);
         });
     }
 

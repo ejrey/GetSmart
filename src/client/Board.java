@@ -9,7 +9,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Board implements ActionListener {
@@ -75,22 +74,22 @@ public class Board implements ActionListener {
         boardPanel.add(colFive);
         boardPanel.add(colSix);
 
-        addColumnToBoardPanel(boardPanel, colOne, 1);
-        addColumnToBoardPanel(boardPanel, colTwo, 2);
-        addColumnToBoardPanel(boardPanel, colThree, 3);
-        addColumnToBoardPanel(boardPanel, colFour, 4);
-        addColumnToBoardPanel(boardPanel, colFive, 5);
-        addColumnToBoardPanel(boardPanel, colSix, 6);
+
+        addColumnToBoardPanel(boardPanel, colOne,1, "CMPT 371");
+        addColumnToBoardPanel(boardPanel, colTwo , 2, "Sports");
+        addColumnToBoardPanel(boardPanel, colThree, 3, "History");
+        addColumnToBoardPanel(boardPanel, colFour, 4, "Music");
+        addColumnToBoardPanel(boardPanel, colFive, 5, "Geography");
+        addColumnToBoardPanel(boardPanel, colSix, 6, "Animals");
 
         mainPanel.add(boardPanel);
-
     }
 
-    private void addColumnToBoardPanel(JPanel boardPanel, JPanel column, int columnNumber) {
+    private void addColumnToBoardPanel(JPanel boardPanel, JPanel column, int columnNumber, String columnName) {
 //        boardPanel.setLayout(new BoxLayout(boardPanel, BoxLayout.X_AXIS));
 
         // Column Name
-        JLabel columnTitle = new JLabel("Col " + columnNumber);
+        JLabel columnTitle = new JLabel("      " + columnName);
         columnTitle.setFont(new Font("Verdana", Font.PLAIN, 20));
         columnTitle.setHorizontalAlignment(JLabel.CENTER);
         column.add(columnTitle);
@@ -123,11 +122,23 @@ public class Board implements ActionListener {
 
     }
 
-    public void updateButtonStates(BoardData boardData) {
-        BoardData.ButtonState[][] buttonStates = boardData.buttonStates;
-        System.out.println("COL = " + boardData.getColumn());
-        System.out.println("ROW "  + boardData.getRow());
+    public void handleButtonCase(BoardData boardData) {
+        switch (boardData.buttonStates[boardData.getColumn()][boardData.getRow()]) {
+            case LOCKED:
+                setButtonToLock(boardData);
+                break;
+            case UNLOCKED:
+                setButtonToUnlock(boardData);
+                break;
+            case ANSWERED:
+                setButtonToAnswered(boardData);
+                break;
+            default:
+                break;
+        }
+    }
 
+    public void setButtonToLock(BoardData boardData) {
         int chosenColumn = boardData.getColumn() + 1;
         int chosenRow = (boardData.getRow() + 1) * 100;
 
@@ -137,6 +148,36 @@ public class Board implements ActionListener {
             if (buttons.get(i).getActionCommand().equals(buttonChosen)) {
                 Component component = buttons.get(i);
                 component.setBackground(Color.RED);
+                component.setEnabled(false);
+            }
+        }
+    }
+
+    public void setButtonToUnlock(BoardData boardData) {
+        int chosenColumn = boardData.getColumn() + 1;
+        int chosenRow = (boardData.getRow() + 1) * 100;
+
+        String buttonChosen = "" + chosenColumn + "-" + chosenRow;
+
+        for (int i = 0; i < buttons.size(); i++) {
+            if (buttons.get(i).getActionCommand().equals(buttonChosen)) {
+                Component component = buttons.get(i);
+                component.setBackground(null);
+                component.setEnabled(true);
+            }
+        }
+    }
+
+    public void setButtonToAnswered(BoardData boardData) {
+        int chosenColumn = boardData.getColumn() + 1;
+        int chosenRow = (boardData.getRow() + 1) * 100;
+
+        String buttonChosen = "" + chosenColumn + "-" + chosenRow;
+
+        for (int i = 0; i < buttons.size(); i++) {
+            if (buttons.get(i).getActionCommand().equals(buttonChosen)) {
+                Component component = buttons.get(i);
+                component.setBackground(Color.DARK_GRAY);
                 component.setEnabled(false);
             }
         }
@@ -159,9 +200,9 @@ public class Board implements ActionListener {
         int row = Integer.parseInt(String.valueOf(buttonPressed.charAt(2))) - 1;
 
         int coordinates[] = {col,row};
+//        System.out.println("Col = " + col + " Row = " + row);
+//        System.out.println(e.getActionCommand());
 
-        System.out.println("Col = " + col + " Row = " + row);
-        System.out.println(e.getActionCommand());
 
         Client.Instance.SendMessageToServer(new Message(Message.Action.GET_QUESTION, GSON.toJson(coordinates)));
 
@@ -176,5 +217,9 @@ public class Board implements ActionListener {
 
 //        App.GoToQuestionPage("hello", row, col, "HELLO", Client.this);
 
+    }
+
+    public void hideBoard() {
+        mainFrame.setVisible(false);
     }
 }

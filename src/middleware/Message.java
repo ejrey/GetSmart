@@ -15,7 +15,8 @@ public class Message {
         START_GAME, // empty
         SEND_ANSWER_TO_SERVER,
         QUESTION_DATA_RECEIVED, // From server to client, client should render question page from body data
-        UPDATE_BOARD // From server to client, client should rerender button states and scores
+        UPDATE_BOARD, // From server to client, client should rerender button states and scores
+        HIDE_BOARD // From server to client, hide the board whenever question is pressed.
     }
 
     public Action action;

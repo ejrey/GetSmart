@@ -62,17 +62,21 @@ public class ClientConnection implements Runnable {
                         var rowAndColumn = GSON.fromJson(message.data, int[].class);
                         var row = rowAndColumn[1];
                         var column = rowAndColumn[0];
-
                         var questions = new Questions(6,5);
                         Question q = questions.getQuestion(column, row);
 
-                        System.out.println("BUTTON PRESSED = " + "col = " + column + "row = " + row);
+
+                        // Send the question to user
                         To(username, new Message(Message.Action.QUESTION_DATA_RECEIVED, GSON.toJson(q)));
+                        // Hide the board for specific user
+                        To(username, new Message(Message.Action.HIDE_BOARD, GSON.toJson(true)));
+                        //Set button state to LOCKED
                         BoardData.buttonStates[column][row] = middleware.BoardData.ButtonState.LOCKED;
+                        // Set the column and row of the button pressed by user
                         BoardData.setColumn(column);
                         BoardData.setRow(row);
+                        // Send data to board
                         Broadcast(new Message(Message.Action.UPDATE_BOARD, GSON.toJson(BoardData)));
-
 
 //                        if (BoardData.buttonStates[column][row] == middleware.BoardData.ButtonState.UNLOCKED) {
 //                            To(username, new Message(Message.Action.QUESTION_DATA_RECEIVED, GSON.toJson(q)));

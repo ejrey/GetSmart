@@ -4,6 +4,7 @@ import server.Question;
 import server.Server;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class BoardData {
     public enum ButtonState {
@@ -26,6 +27,8 @@ public class BoardData {
                 buttonStates[column][row] = ButtonState.UNLOCKED;
 
     }
+
+
 
     public void setColumn(int column) {
         this.column = column;
@@ -50,4 +53,5 @@ public class BoardData {
     public ArrayList<ClientData> getClients() {
         return clients;
     }
+
 }

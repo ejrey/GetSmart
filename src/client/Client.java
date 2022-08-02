@@ -74,11 +74,12 @@ public class Client implements Runnable  {
                     case UPDATE_BOARD:
                         // Listen to whenever the server tells us to update this board.
                         var boardData = GSON.fromJson(message.data, BoardData.class);
-                        App.UpdateBoardButtons(boardData);
-
-
+                        App.setButtonOnBoardToState(boardData);
                         // Re-render the jeopardy board and people scores
                         // button status, usernames and score
+                        break;
+                    case HIDE_BOARD:
+                        App.SetBoardInvisible();
                         break;
                     case IGNORE:
                         break;
