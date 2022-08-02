@@ -1,6 +1,7 @@
 package client;
 
 import middleware.ClientData;
+import middleware.Message;
 
 import javax.swing.*;
 import java.awt.*;
@@ -62,15 +63,18 @@ public class WaitingRoom implements ActionListener {
         usernameText.setText(stringBuilder.toString());
     }
 
-    public void GoToBoard() {
-        new Board();
+    public void StartGame() {
+        Client.Instance.SendMessageToServer(new Message(Message.Action.START_GAME, ""));
+    }
+
+    public void Dispose() {
         waitingRoomFrame.dispose();
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("Start")) {
-            GoToBoard();
+            StartGame();
         }
     }
 }

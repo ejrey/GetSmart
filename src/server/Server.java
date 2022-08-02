@@ -1,6 +1,7 @@
 package server;
 
 import com.google.gson.Gson;
+import middleware.ClientData;
 import middleware.Message;
 
 import java.io.IOException;
@@ -27,7 +28,7 @@ public class Server {
     public void Start() {
         //initialize Questions.
         //this.Questions.getQuestion(1,2);
-        this.Questions.initializeQuestions();
+//        this.Questions.initializeQuestions();
         try {
             while (!serverSocket.isClosed()) {
                 var socket = serverSocket.accept();
@@ -67,6 +68,16 @@ public class Server {
                 break;
             }
         }
+    }
+
+    public static ArrayList<ClientData> GetClientsData() {
+        var clientsData = new ArrayList<ClientData>();
+        ConnectedClients.forEach((clientConnection -> {
+            var data = new ClientData();
+            data.username = clientConnection.username;
+            clientsData.add(data);
+        }));
+        return clientsData;
     }
 
 //The concept of a question from the server
