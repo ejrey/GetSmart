@@ -69,7 +69,7 @@ public class Client implements Runnable  {
                     case QUESTION_DATA_RECEIVED:
                         var questionData = GSON.fromJson(message.data, QuestionData.class);
                         System.out.println(questionData);
-                        App.GoToQuestionPage(questionData.question, questionData.row, questionData.col, questionData.answers, this);
+                        App.GoToQuestionPage(questionData.question, questionData.row, questionData.col, questionData.answers);
                         break;
                     case UPDATE_BOARD:
                         // Re-render the jeopardy board and people scores
