@@ -69,7 +69,8 @@ public class Client implements Runnable  {
                         break;
                     case QUESTION_DATA_RECEIVED:
                         var questionData = GSON.fromJson(message.data, QuestionData.class);
-                        App.GoToQuestionPage(questionData.question, questionData.row, questionData.col, questionData.answers, this);
+                        System.out.println(questionData);
+                        App.GoToQuestionPage(questionData.question, questionData.row, questionData.col, questionData.answers);
                         break;
                     case UPDATE_BOARD:
                         // Listen to whenever the server tells us to update this board.
