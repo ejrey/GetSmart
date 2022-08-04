@@ -68,8 +68,10 @@ public class Client implements Runnable  {
                         App.UpdateWaitingRoomUserNames(waitingClientData);
                         break;
                     case QUESTION_DATA_RECEIVED:
+                        // The client receives this event when the server wants it to go to the question page
                         var questionData = GSON.fromJson(message.data, QuestionData.class);
                         System.out.println(questionData);
+                        App.SetBoardInvisible();
                         App.GoToQuestionPage(questionData.question, questionData.row, questionData.col, questionData.answers);
                         break;
                     case UPDATE_BOARD:
@@ -78,9 +80,6 @@ public class Client implements Runnable  {
                         App.setButtonOnBoardToState(boardData);
                         // Re-render the jeopardy board and people scores
                         // button status, usernames and score
-                        break;
-                    case HIDE_BOARD:
-                        App.SetBoardInvisible();
                         break;
                     case IGNORE:
                         break;

@@ -6,17 +6,13 @@ public class Message {
         SET_USERNAME, // ClientData
         SEND_TO_WAITING_ROOM, // ClientData
         WAITING_ROOM_UPDATE_USERNAMES, // ArrayList of ClientData
-        REQUEST_QUESTION_COLUMNS,
-        SEND_TO_QUESTION_BOARD, //Server-To-Client, sent once to set up question board's column names.
 
         GET_QUESTION, //Client-to-Server, used when client clicks a question button. invokes SEND_TO_QUESTION_PAGE
-        SEND_TO_QUESTION_PAGE, //Server-To-Client, sent once to set up question page with one question's Data.
         SEND_TO_BOARD, // ArrayList of ClientData of usernames
         START_GAME, // empty
         SEND_ANSWER_TO_SERVER,
         QUESTION_DATA_RECEIVED, // From server to client, client should render question page from body data
         UPDATE_BOARD, // From server to client, client should rerender button states and scores
-        HIDE_BOARD // From server to client, hide the board whenever question is pressed.
     }
 
     public Action action;

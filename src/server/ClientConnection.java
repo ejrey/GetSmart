@@ -68,8 +68,6 @@ public class ClientConnection implements Runnable {
 
                         // Send the question to user
                         To(username, new Message(Message.Action.QUESTION_DATA_RECEIVED, GSON.toJson(q)));
-                        // Hide the board for specific user
-                        To(username, new Message(Message.Action.HIDE_BOARD, GSON.toJson(true)));
                         //Set button state to LOCKED
                         BoardData.buttonStates[column][row] = middleware.BoardData.ButtonState.LOCKED;
                         // Set the column and row of the button pressed by user

@@ -21,16 +21,11 @@ public class Board implements ActionListener {
     public static final Gson GSON = new Gson();
 
     public Board(ArrayList<ClientData> clientsData) {
-        // TODO: Remove, just testing.
-//        clientsData.forEach((clientData -> System.out.println(clientData.username)));
-
         mainFrame.setSize(1280, 720);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setVisible(true);
 
-//        JPanel mainPanel = new JPanel(new BorderLayout());
         JPanel mainPanel = new JPanel();
-//        mainPanel.setLayout(new GridBagLayout());
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         mainFrame.add(mainPanel);
 
@@ -39,14 +34,10 @@ public class Board implements ActionListener {
         JLabel title = new JLabel("Players");
         title.setFont(new Font("Verdana", Font.PLAIN, 50));
         titlePanel.add(title);
-//        mainPanel.add(titlePanel, BorderLayout.NORTH);
-//        titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
         mainPanel.add(titlePanel);
 
         JPanel usernamePanel = new JPanel();
         titlePanel.add(usernamePanel, BorderLayout.AFTER_LAST_LINE);
-//        usernamePanel.setLayout(new BoxLayout(usernamePanel, BoxLayout.Y_AXIS));
-
 
         // ADDING A USERNAME
         for (int i = 0; i < clientsData.size(); i++) {
@@ -89,7 +80,7 @@ public class Board implements ActionListener {
 //        boardPanel.setLayout(new BoxLayout(boardPanel, BoxLayout.X_AXIS));
 
         // Column Name
-        JLabel columnTitle = new JLabel("      " + columnName);
+        JLabel columnTitle = new JLabel("" + columnName);
         columnTitle.setFont(new Font("Verdana", Font.PLAIN, 20));
         columnTitle.setHorizontalAlignment(JLabel.CENTER);
         column.add(columnTitle);
@@ -107,11 +98,6 @@ public class Board implements ActionListener {
             buttonQuestion.setBorder(BorderFactory.createCompoundBorder(
                     BorderFactory.createLineBorder(Color.DARK_GRAY, 10),
                     BorderFactory.createEmptyBorder(0, 30, 0, 30)));
-
-//            buttonQuestion.setMaximumSize(new Dimension (400, 400));
-//            buttonQuestion.setBorder(BorderFactory.createCompoundBorder(
-//                    BorderFactory.createLineBorder(Color.DARK_GRAY, 10),
-//                    BorderFactory.createEmptyBorder(0, 50, 0, 50)));
 
             column.add(buttonQuestion);
             buttons.add(buttonQuestion);
@@ -200,23 +186,7 @@ public class Board implements ActionListener {
         int row = Integer.parseInt(String.valueOf(buttonPressed.charAt(2))) - 1;
 
         int coordinates[] = {col,row};
-//        System.out.println("Col = " + col + " Row = " + row);
-//        System.out.println(e.getActionCommand());
-
-
         Client.Instance.SendMessageToServer(new Message(Message.Action.GET_QUESTION, GSON.toJson(coordinates)));
-
-
-        // Setting background for specific button example
-//        Component component = (Component) e.getSource();
-//
-//        component.setBackground(Color.red);
-
-        // Setting the button to be unclickable if guessed correctly.
-//        component.setEnabled(false);
-
-//        App.GoToQuestionPage("hello", row, col, "HELLO", Client.this);
-
     }
 
     public void hideBoard() {
