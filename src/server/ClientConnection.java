@@ -84,12 +84,6 @@ public class ClientConnection implements Runnable {
 //                            Broadcast(new Message(Message.Action.UPDATE_BOARD, GSON.toJson(BoardData)));
 //                        }
                         break;
-                    case REQUEST_QUESTION_COLUMNS:
-                        To(username, new Message(Message.Action.SEND_TO_QUESTION_BOARD, GSON.toJson(new String[]{
-                                "Column1", "Column2", "Column3", "Column4", "Column5", "Column6",
-                    }
-                    )));
-                        break;
                     case IGNORE:
                         break;
                 }
