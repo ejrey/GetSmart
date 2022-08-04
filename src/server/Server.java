@@ -21,7 +21,7 @@ public class Server {
 
     public static void main(String[] args) throws IOException {
         var port = args.length == 0 ? 3000 : Integer.parseInt(args[0]);
-        var serverSocket = new ServerSocket(port); // Might want to pass in port as command arg
+        var serverSocket = new ServerSocket(port);
         var server = new Server(serverSocket);
         server.Start();
     }
