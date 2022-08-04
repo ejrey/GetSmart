@@ -78,10 +78,12 @@ public class QuestionPage implements ActionListener{
     private void createQuestionPanel(String labelName, JPanel mainPanel) {
         JPanel questionTitlePanel = new JPanel();
         questionTitlePanel.setBorder(BorderFactory.createEmptyBorder(50,10,10,10));
-        questionTitlePanel.setSize(200,200);
-        JLabel questionLabel = new JLabel(labelName);
-        questionLabel.setFont(new Font("Verdana", Font.PLAIN, 50));
-        questionTitlePanel.add(questionLabel);
+        questionTitlePanel.setSize(1000,100);
+        JTextArea questionTextArea = new JTextArea(labelName);
+        questionTextArea.setLineWrap(true);
+        questionTextArea.setFont(new Font("Verdana", Font.PLAIN, 20));
+        questionTextArea.setSize(1000,100);
+        questionTitlePanel.add(questionTextArea);
         mainPanel.add(questionTitlePanel);
     }
 
