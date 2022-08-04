@@ -70,17 +70,8 @@ public class ClientConnection implements Runnable {
                         To(username, new Message(Message.Action.QUESTION_DATA_RECEIVED, GSON.toJson(q)));
                         //Set button state to LOCKED
                         BoardData.buttonStates[column][row] = middleware.BoardData.ButtonState.LOCKED;
-                        // Set the column and row of the button pressed by user
-                        BoardData.setColumn(column);
-                        BoardData.setRow(row);
                         // Send data to board
                         Broadcast(new Message(Message.Action.UPDATE_BOARD, GSON.toJson(BoardData)));
-
-//                        if (BoardData.buttonStates[column][row] == middleware.BoardData.ButtonState.UNLOCKED) {
-//                            To(username, new Message(Message.Action.QUESTION_DATA_RECEIVED, GSON.toJson(q)));
-//                            BoardData.buttonStates[column][row] = middleware.BoardData.ButtonState.LOCKED;
-//                            Broadcast(new Message(Message.Action.UPDATE_BOARD, GSON.toJson(BoardData)));
-//                        }
                         break;
                     case IGNORE:
                         break;
