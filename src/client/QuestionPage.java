@@ -99,19 +99,19 @@ public class QuestionPage implements ActionListener{
     public void actionPerformed(ActionEvent e){
         if (e.getActionCommand().equals("1")){
             questionFrame.dispose();
-            var answerData = new AnswerData("1", row, col, Client.Instance.getUsername());
+            var answerData = new AnswerData(buttonAnswers[0], row, col, Client.Instance.getUsername());
             sendAnswer(answerData);
         } else if (e.getActionCommand().equals("2")){
             questionFrame.dispose();
-            var answerData = new AnswerData("2", row, col, Client.Instance.getUsername());
+            var answerData = new AnswerData(buttonAnswers[1], row, col, Client.Instance.getUsername());
             sendAnswer(answerData);
         } else if (e.getActionCommand().equals("3")){
             questionFrame.dispose();
-            var answerData = new AnswerData("3", row, col, Client.Instance.getUsername());
+            var answerData = new AnswerData(buttonAnswers[2], row, col, Client.Instance.getUsername());
             sendAnswer(answerData);
         } else if (e.getActionCommand().equals("4")){
             questionFrame.dispose();
-            var answerData = new AnswerData("4", row, col, Client.Instance.getUsername());
+            var answerData = new AnswerData(buttonAnswers[3], row, col, Client.Instance.getUsername());
             sendAnswer(answerData);
         }
     }
