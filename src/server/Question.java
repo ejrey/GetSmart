@@ -31,8 +31,8 @@ public class Question {
         return null;
     }
 
-    public Boolean isAnswerCorrect(String threadId, String answer) {
-        if(currentAnswerer.equals(threadId) ){
+    public Boolean isAnswerCorrect(String username, String answer) {
+        if(currentAnswerer.equals(username) ){
             if (answer.equals(correctAnswer)){
                 currentAnswerer = null;
                 return true;
