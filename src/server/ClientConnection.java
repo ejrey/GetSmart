@@ -1,6 +1,7 @@
 package server;
 
 import client.Board;
+import middleware.AnswerData;
 import middleware.BoardData;
 import middleware.ClientData;
 import middleware.Message;
@@ -56,32 +57,50 @@ public class ClientConnection implements Runnable {
                         Broadcast(new Message(Message.Action.SEND_TO_BOARD, GSON.toJson(Server.GetClientsData())));
                         break;
                     case GET_QUESTION:
-                        //this query from the client passes in an int array of the column then the row of a desired question
-                        //The response to the client is a Question object.
-
-                        var rowAndColumn = GSON.fromJson(message.data, int[].class);
-                        var row = rowAndColumn[1];
-                        var column = rowAndColumn[0];
-                        var questions = new Questions(6,5);
-                        Question q = questions.getQuestion(column, row);
-
-
-                        // Send the question to user
+                        var questionRequest = GSON.fromJson(message.data, AnswerData.class);
+                        Question q = Questions.tryGetQuestion(questionRequest.col, questionRequest.row, questionRequest.username);
+                        if (q == null){
+                            //the question is locked. Simply broadcast the board's current state.
+                            Broadcast(new Message(Message.Action.UPDATE_BOARD, GSON.toJson(BoardData)));
+                            break;
+                        }
+                        // Otherwise, send the question to user
                         To(username, new Message(Message.Action.QUESTION_DATA_RECEIVED, GSON.toJson(q)));
-                        //Set button state to LOCKED
-                        BoardData.buttonStates[column][row] = middleware.BoardData.ButtonState.LOCKED;
-                        // Set the column and row of the button pressed by user
-                        BoardData.setColumn(column);
-                        BoardData.setRow(row);
-                        // Send data to board
-                        Broadcast(new Message(Message.Action.UPDATE_BOARD, GSON.toJson(BoardData)));
 
-//                        if (BoardData.buttonStates[column][row] == middleware.BoardData.ButtonState.UNLOCKED) {
-//                            To(username, new Message(Message.Action.QUESTION_DATA_RECEIVED, GSON.toJson(q)));
-//                            BoardData.buttonStates[column][row] = middleware.BoardData.ButtonState.LOCKED;
-//                            Broadcast(new Message(Message.Action.UPDATE_BOARD, GSON.toJson(BoardData)));
-//                        }
+                        //Then, set button state to LOCKED since a user is now in the question
+                        BoardData.buttonStates[q.getColumn()][q.getRow()] = middleware.BoardData.ButtonState.LOCKED;
+                        // Update everyone's board
+                        Broadcast(new Message(Message.Action.UPDATE_BOARD, GSON.toJson(BoardData)));
                         break;
+
+                    case SEND_ANSWER_TO_SERVER: // Client to Server, occurs when client wants to attempt a guess at the right answer
+                        //check if the answer is correct, if so award this player points based on the question row.
+                        //update the question to be unlocked if wrong or answered if correct, and broadcast the new board state.
+                        //TODO: the above
+                        var guess = GSON.fromJson(message.data, AnswerData.class);
+                        var  player = BoardData.getClient(guess.username);
+                        if(player == null){
+                            //If the player doesn't exist, they can never get a question right. unlock the question and broadcast the update
+                            BoardData.buttonStates[guess.col][guess.row] = middleware.BoardData.ButtonState.UNLOCKED;
+                            Broadcast(new Message(Message.Action.UPDATE_BOARD, GSON.toJson(BoardData)));
+                            break;
+                        }
+                        Question questionToAnswer = Questions.getQuestion(guess.col, guess.row,guess.username);
+                        if(questionToAnswer.isAnswerCorrect(guess.username, guess.answer)){
+                            //the right answer
+                            //give the player points
+                            player.gainPoints(questionToAnswer.getRow());
+                            //Set the question to Answered, unclickable
+                            BoardData.buttonStates[guess.col][guess.row] = middleware.BoardData.ButtonState.ANSWERED;
+                            Broadcast(new Message(Message.Action.UPDATE_BOARD, GSON.toJson(BoardData)));
+                        }
+                        else{
+                            //wrong answer
+                            //Unlock the question so others can try it.
+                            BoardData.buttonStates[guess.col][guess.row] = middleware.BoardData.ButtonState.UNLOCKED;
+                            Broadcast(new Message(Message.Action.UPDATE_BOARD, GSON.toJson(BoardData)));
+                        }
+
                     case IGNORE:
                         break;
                 }

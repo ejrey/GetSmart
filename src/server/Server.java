@@ -76,7 +76,6 @@ public class Server {
         ConnectedClients.forEach((clientConnection -> {
             var data = new ClientData();
             data.username = clientConnection.username;
-            data.score = clientConnection.score;
             clientsData.add(data);
         }));
         return clientsData;

@@ -9,7 +9,7 @@ public class Question {
 
     private String correctAnswer;
 
-    private String currentAnswerer = ""; //When false, one process may get this question's info.
+    private String currentAnswerer = "unlocked"; //When false, one process may get this question's info.
     //When true, no thread may get this question's info
 
 
@@ -23,13 +23,10 @@ public class Question {
 
     //tryGetQuestion
     //if this thread has this question's lock or no one does, return the question
-    public String tryGetQuestion(String threadId) {
-        if(currentAnswerer.equals(threadId) || currentAnswerer.equals("")){
+    public Question tryGetQuestion(String threadId) {
+        if(currentAnswerer.equals(threadId) || currentAnswerer.equals("unlocked")){
             currentAnswerer = threadId;
-            Gson gson = new Gson();
-            String json = gson.toJson(this);
-            System.out.println(json);
-            return json;
+            return this;
         }
         return null;
     }
@@ -37,7 +34,7 @@ public class Question {
     public Boolean isAnswerCorrect(String threadId, String answer) {
         if(currentAnswerer.equals(threadId) ){
             if (answer.equals(correctAnswer)){
-                currentAnswerer = ""; //after a right or wrong answer, lose the lock.
+                currentAnswerer = "unlocked"; //after a right or wrong answer, lose the lock.
                 return true;
             }
         }

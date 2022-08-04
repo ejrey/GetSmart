@@ -11,39 +11,23 @@ public class BoardData {
         LOCKED,
         UNLOCKED,
         ANSWERED,
-
     }
     public ButtonState buttonStates[][]; // Array of status of each button the area
     public ArrayList<ClientData> clients;
-    public int column;
-    public int row;
+    public int columns;
+    public int rows;
 
     public BoardData() {
-        this.buttonStates = new ButtonState[6][5];
+        this.columns = 6;
+        this.rows = 5;
+        this.buttonStates = new ButtonState[this.columns][this.rows];
         this.clients = Server.GetClientsData();
+
 
         for(int column=0; column<6; column++)
             for(int row=0; row<5; row++)
                 buttonStates[column][row] = ButtonState.UNLOCKED;
 
-    }
-
-
-
-    public void setColumn(int column) {
-        this.column = column;
-    }
-
-    public void setRow(int row) {
-        this.row = row;
-    }
-
-    public int getColumn() {
-        return column;
-    }
-
-    public int getRow() {
-        return row;
     }
 
     public ButtonState[][] getButtonStates() {
@@ -52,6 +36,17 @@ public class BoardData {
 
     public ArrayList<ClientData> getClients() {
         return clients;
+    }
+
+    //Given a username, return that client's data if they exist.
+    public ClientData getClient(String username) {
+        for(ClientData client : clients){
+            if(client.username.equals(username)){
+                return client;
+            }
+        }
+        //Otherwise it doesn't exist in the list.
+        return null;
     }
 
 }
