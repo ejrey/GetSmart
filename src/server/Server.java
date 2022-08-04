@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class Server {
     public static final Gson GSON = new Gson();
     public static ArrayList<ClientConnection> ConnectedClients = new ArrayList<>();
-    public static Questions Questions = new Questions(5,6);
+    public static Questions Questions = new Questions(6,5);
     public static BoardData BoardData = new BoardData();
 
     private final ServerSocket serverSocket;

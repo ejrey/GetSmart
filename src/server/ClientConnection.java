@@ -1,10 +1,7 @@
 package server;
 
 import client.Board;
-import middleware.AnswerData;
-import middleware.BoardData;
-import middleware.ClientData;
-import middleware.Message;
+import middleware.*;
 
 import java.io.*;
 import java.net.Socket;
@@ -59,13 +56,17 @@ public class ClientConnection implements Runnable {
                     case GET_QUESTION:
                         var questionRequest = GSON.fromJson(message.data, AnswerData.class);
                         Question q = Questions.tryGetQuestion(questionRequest.col, questionRequest.row, questionRequest.username);
+
                         if (q == null){
                             //the question is locked. Simply broadcast the board's current state.
                             Broadcast(new Message(Message.Action.UPDATE_BOARD, GSON.toJson(BoardData)));
                             break;
                         }
+
+                        QuestionData questionData = new QuestionData(q.getColumn(), q.getRow(), q.getQuestion(), q.getAnswers());
+
                         // Otherwise, send the question to user
-                        To(username, new Message(Message.Action.QUESTION_DATA_RECEIVED, GSON.toJson(q)));
+                        To(username, new Message(Message.Action.QUESTION_DATA_RECEIVED, GSON.toJson(questionData)));
 
                         //Then, set button state to LOCKED since a user is now in the question
                         BoardData.buttonStates[q.getColumn()][q.getRow()] = middleware.BoardData.ButtonState.LOCKED;
@@ -77,10 +78,8 @@ public class ClientConnection implements Runnable {
                         //check if the answer is correct, if so award this player points based on the question row.
                         //update the question to be unlocked if wrong or answered if correct, and broadcast the new board state.
                         //TODO: the above
-                        System.out.println("test1");
                         var guess = GSON.fromJson(message.data, AnswerData.class);
                         Question questionToAnswer = Questions.getQuestion(guess.col, guess.row,guess.username);
-                        System.out.println("we here");
                         if(questionToAnswer.isAnswerCorrect(guess.username, guess.answer)){
                             //the right answer
                             //give the player points
