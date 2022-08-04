@@ -144,7 +144,7 @@ public class App implements ActionListener {
         });
     }
 
-    public static void setButtonOnBoardToState(BoardData boardData) {
+    public static void updateBoardScreen(BoardData boardData) {
         SwingUtilities.invokeLater(() -> {
             Instance.board.handleButtonCase(boardData);
         });

@@ -18,6 +18,10 @@ public class Board implements ActionListener {
     JLabel usernameText;
     JPanel boardPanel = new JPanel(new GridBagLayout());
     ArrayList<JButton> buttons = new ArrayList<>();
+    ArrayList<JLabel> username = new ArrayList<>();
+    JPanel mainPanel = new JPanel();
+    JPanel player = new JPanel();
+    JPanel usernamePanel = new JPanel();
 
     public static final Gson GSON = new Gson();
 
@@ -26,7 +30,6 @@ public class Board implements ActionListener {
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setVisible(true);
 
-        JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         mainFrame.add(mainPanel);
 
@@ -37,16 +40,15 @@ public class Board implements ActionListener {
         titlePanel.add(title);
         mainPanel.add(titlePanel);
 
-        JPanel usernamePanel = new JPanel();
         titlePanel.add(usernamePanel, BorderLayout.AFTER_LAST_LINE);
 
         // ADDING A USERNAME
         for (int i = 0; i < clientsData.size(); i++) {
-            JLabel usernameText = new JLabel(clientsData.get(i).username);
+            usernameText = new JLabel(clientsData.get(i).username + ": " + clientsData.get(i).score);
             usernameText.setFont(new Font("Verdana", Font.PLAIN, 40));
-            JPanel player = new JPanel();
             usernamePanel.add(player);
             player.add(usernameText);
+            username.add(usernameText);
         }
         mainPanel.add(usernamePanel);
 
@@ -81,7 +83,7 @@ public class Board implements ActionListener {
 //        boardPanel.setLayout(new BoxLayout(boardPanel, BoxLayout.X_AXIS));
 
         // Column Name
-        JLabel columnTitle = new JLabel("" + columnName);
+        JLabel columnTitle = new JLabel("" + columnName, SwingConstants.CENTER);
         columnTitle.setFont(new Font("Verdana", Font.PLAIN, 20));
         columnTitle.setHorizontalAlignment(JLabel.CENTER);
         column.add(columnTitle);
@@ -109,6 +111,12 @@ public class Board implements ActionListener {
     }
 
     public void handleButtonCase(BoardData boardData) {
+
+        for (int i = 0; i < boardData.getClients().size(); i++) {
+            usernameText.setText(boardData.getClients().get(i).username + ": " + boardData.getClients().get(i).score);
+        }
+
+
         for(int column=0; column<6; column++) {
             for(int row=0; row<5; row++){
                 switch (boardData.buttonStates[column][row]) {
