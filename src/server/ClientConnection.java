@@ -83,9 +83,6 @@ public class ClientConnection implements Runnable {
                         var guess = GSON.fromJson(message.data, AnswerData.class);
                         Question questionToAnswer = Questions.getQuestion(guess.col, guess.row,guess.username);
 
-                        System.out.println(guess.col);
-                        System.out.println(guess.row);
-
                         if(questionToAnswer.isAnswerCorrect(guess.username, guess.answer)){
                             //the right answer
                             //give the player points
@@ -94,16 +91,12 @@ public class ClientConnection implements Runnable {
                             BoardData.clients = Server.GetClientsData();
                             BoardData.buttonStates[guess.col][guess.row] = middleware.BoardData.ButtonState.ANSWERED;
                             Broadcast(new Message(Message.Action.UPDATE_BOARD, GSON.toJson(BoardData)));
-                            System.out.println("RIGHT");
-                            System.out.println(BoardData);
                         }
                         else{
                             //wrong answer
                             //Unlock the question so others can try it.
                             BoardData.buttonStates[guess.col][guess.row] = middleware.BoardData.ButtonState.UNLOCKED;
                             Broadcast(new Message(Message.Action.UPDATE_BOARD, GSON.toJson(BoardData)));
-                            System.out.println("WRONG");
-                            System.out.println(BoardData);
                         }
 
                     case IGNORE:

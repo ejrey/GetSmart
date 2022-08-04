@@ -73,7 +73,6 @@ public class Client implements Runnable  {
                     case QUESTION_DATA_RECEIVED:
                         // The client receives this event when the server wants it to go to the question page
                         var questionData = GSON.fromJson(message.data, QuestionData.class);
-                        System.out.println(questionData);
                         App.SetBoardInvisible();
                         App.GoToQuestionPage(questionData.question, questionData.row, questionData.col, questionData.answers);
                         break;
