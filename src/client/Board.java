@@ -1,6 +1,7 @@
 package client;
 
 import com.google.gson.Gson;
+import middleware.AnswerData;
 import middleware.BoardData;
 import middleware.ClientData;
 import middleware.Message;
@@ -189,7 +190,8 @@ public class Board implements ActionListener {
         int row = Integer.parseInt(String.valueOf(buttonPressed.charAt(2))) - 1;
 
         int coordinates[] = {col,row};
-        Client.Instance.SendMessageToServer(new Message(Message.Action.GET_QUESTION, GSON.toJson(coordinates)));
+        AnswerData desiredQuestion = new AnswerData(row, col, Client.Instance.getUsername());
+        Client.Instance.SendMessageToServer(new Message(Message.Action.GET_QUESTION, GSON.toJson(desiredQuestion)));
     }
 
     public void hideBoard() {

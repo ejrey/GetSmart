@@ -93,12 +93,16 @@ public class ClientConnection implements Runnable {
                             //Set the question to Answered, unclickable
                             BoardData.buttonStates[guess.col][guess.row] = middleware.BoardData.ButtonState.ANSWERED;
                             Broadcast(new Message(Message.Action.UPDATE_BOARD, GSON.toJson(BoardData)));
+                            System.out.println("RIGHT");
+                            System.out.println(BoardData);
                         }
                         else{
                             //wrong answer
                             //Unlock the question so others can try it.
                             BoardData.buttonStates[guess.col][guess.row] = middleware.BoardData.ButtonState.UNLOCKED;
                             Broadcast(new Message(Message.Action.UPDATE_BOARD, GSON.toJson(BoardData)));
+                            System.out.println("WRONG");
+                            System.out.println(BoardData);
                         }
 
                     case IGNORE:
