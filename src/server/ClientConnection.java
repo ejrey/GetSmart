@@ -61,13 +61,6 @@ public class ClientConnection implements Runnable {
                         Question q = questions.getQuestion(rowAndColumn[0],rowAndColumn[1]);
                         System.out.println(q);
                         To(username, new Message(Message.Action.QUESTION_DATA_RECEIVED, GSON.toJson(q)));
-
-                        //Unused, column names are static
-//                    case REQUEST_QUESTION_COLUMNS:
-//                        To(username, new Message(Message.Action.SEND_TO_QUESTION_BOARD, GSON.toJson(new String[]{
-//                                "Networking", "Sports", "Canada", "Music", "Geography", "Animal Trivia",
-//                    }
-//                    )));
                         break;
                     case IGNORE:
                         break;
