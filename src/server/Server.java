@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class Server {
     public static final Gson GSON = new Gson(); // GSON instance to assist us with converting to and from JSON
     public static ArrayList<ClientConnection> ConnectedClients = new ArrayList<>(); // List of all currently connected clients
-    public static Questions Questions = new Questions(5,6); // The questions that the clients will be served
+    public static Questions Questions = new Questions(6,5); // The questions that the clients will be served
     public static BoardData BoardData = new BoardData(); // The current state of the board
 
     private final ServerSocket serverSocket;

@@ -15,7 +15,7 @@ public class ClientConnection implements Runnable {
     public BufferedWriter bufferedWriter; // Used to write to the client
     public BufferedReader bufferedReader; // Used to read data from the client
     public String username; // Client's username
-    public Integer score; // Client's score
+    public Integer score = 0; // Client's score
     private Socket socket;
 
     // We pass in the socket connection of the client and setup bufferedWriter and bufferedReader to facilitate
@@ -82,6 +82,10 @@ public class ClientConnection implements Runnable {
                         //TODO: the above
                         var guess = GSON.fromJson(message.data, AnswerData.class);
                         Question questionToAnswer = Questions.getQuestion(guess.col, guess.row,guess.username);
+
+                        System.out.println(guess.col);
+                        System.out.println(guess.row);
+
                         if(questionToAnswer.isAnswerCorrect(guess.username, guess.answer)){
                             //the right answer
                             //give the player points

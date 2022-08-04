@@ -34,11 +34,11 @@ public class Questions {
             new Question(0,0,"Which country does NOT share a border with Egypt?",new String[]{"Chad","Libya","Israel","Saudi Arabia"},"Chad"),
             //animal Trivia 100 to 500
 
-            new Question(0,0,"What is a group of lions called?",new String[]{"A pride","a groupie","a hoard","a bundle"},"a pride"),
+            new Question(0,0,"What is a group of lions called?",new String[]{"A pride","a groupie","a hoard","a bundle"},"A pride"),
             new Question(0,0,"How many bones does a shark have?",new String[]{"Less than 20","21-100","101-300","More than 300"},"Less than 20"),
             new Question(0,0,"What is a female donkey called?",new String[]{"Jenny","Heifer","Doe","Mare"},"Jenny"),
             new Question(0,0,"How fast can a blue whale swim?",new String[]{"21-40 km/h","11-20 km/h","< 10 km/h","> 41 km/h"},"> 41 km/h"),
-            new Question(0,0,"What colour is a hippo's sweat?",new String[]{"Pink ","Grey","Blue","White"},"Pink"),
+            new Question(0,0,"What colour is a hippo's sweat?",new String[]{"Pink","Grey","Blue","White"},"Pink"),
     };
     public Question[][] currentQuestions;//starting from bottom left (0,0), i is column, j is row
 
