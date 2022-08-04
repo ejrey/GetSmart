@@ -120,6 +120,10 @@ public class QuestionPage implements ActionListener{
 
     private void sendAnswer(AnswerData answerData){
         Client.Instance.SendMessageToServer(new Message(Message.Action.SEND_ANSWER_TO_SERVER, GSON.toJson(answerData)));
+        showBoard();
+    }
+    public void showBoard() {
+        App.Instance.board.mainFrame.setVisible(true);
     }
 
 }
