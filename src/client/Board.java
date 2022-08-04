@@ -75,12 +75,12 @@ public class Board implements ActionListener {
         boardPanel.add(colSix);
 
 
-        addColumnToBoardPanel(boardPanel, colOne,1, "CMPT 371");
+        addColumnToBoardPanel(boardPanel, colOne,1, "Networking");
         addColumnToBoardPanel(boardPanel, colTwo , 2, "Sports");
-        addColumnToBoardPanel(boardPanel, colThree, 3, "History");
+        addColumnToBoardPanel(boardPanel, colThree, 3, "Canada");
         addColumnToBoardPanel(boardPanel, colFour, 4, "Music");
         addColumnToBoardPanel(boardPanel, colFive, 5, "Geography");
-        addColumnToBoardPanel(boardPanel, colSix, 6, "Animals");
+        addColumnToBoardPanel(boardPanel, colSix, 6, "Animal Trivia");
 
         mainPanel.add(boardPanel);
     }
