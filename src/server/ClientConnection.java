@@ -1,40 +1,38 @@
 package server;
 
-import client.Board;
-import middleware.BoardData;
 import middleware.ClientData;
 import middleware.Message;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.ArrayList;
 
 import static server.Server.*;
 
+// This class represents a current client connection to a server running on a separate thread.
 public class ClientConnection implements Runnable {
-
-    // Talk from Server to a client.
     public BufferedWriter bufferedWriter; // Used to write to the client
     public BufferedReader bufferedReader; // Used to read data from the client
-    public String username;
-    public Integer score;
+    public String username; // Client's username
+    public Integer score; // Client's score
     private Socket socket;
-    public Questions Questions;
 
-    public ClientConnection(Socket socket, Questions qs) {
-        this.Questions = qs;
+    // We pass in the socket connection of the client and setup bufferedWriter and bufferedReader to facilitate
+    // communication to and from the server.
+    public ClientConnection(Socket socket) {
         try {
             this.socket = socket;
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
+            // Let the server know that we have a new client to track.
             ConnectedClients.add(this);
         } catch (IOException e) {
             Close();
         }
     }
 
-    // Loop to get message from Client that is running on a thread.
+    // The thread that is running for the connected client. It's an infinite while loop that listens to message from
+    // the client socket.
     @Override
     public void run() {
         String incomingMessageFromClient;
@@ -92,7 +90,9 @@ public class ClientConnection implements Runnable {
         }
     }
 
+    // If everything goes wrong let's close down the client correctly and print the stack trace.
     public void Close() {
+        // We need to remove the client from the list of active clients.
         ConnectedClients.remove(this);
         try {
             if (bufferedWriter != null) {

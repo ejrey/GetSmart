@@ -13,8 +13,10 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 
+// This is the class that handles the Java Swing interface.
 public class App implements ActionListener {
 
+    // This is the entry point of the clientside.
     public static void main(String[] args) {}
     public static final Gson GSON = new Gson();
     private static final App Instance = new App();
@@ -121,10 +123,7 @@ public class App implements ActionListener {
             System.exit(0);
         }
     }
-
-    // TODO: We should put every type of screen inside of this single class.
-    // If you want to call any UI change, it needs to be inside of "SwingUtilities.invokeLater"!
-    // You can use "Instance." to access the original App instance.
+    
     public static void GoToWaitingRoom() {
         SwingUtilities.invokeLater(() -> {
             Instance.waitingRoom = new WaitingRoom();
