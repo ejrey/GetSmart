@@ -1,6 +1,7 @@
 package client;
 
 import com.google.gson.reflect.TypeToken;
+import middleware.BoardData;
 import middleware.ClientData;
 import middleware.Message;
 import middleware.QuestionData;
@@ -72,6 +73,8 @@ public class Client implements Runnable  {
                         App.GoToQuestionPage(questionData.question, questionData.row, questionData.col, questionData.answers);
                         break;
                     case UPDATE_BOARD:
+                        // Listen to whenever the server tells us to update this board.
+                        var boardData = GSON.fromJson(message.data, BoardData.class);
                         // Re-render the jeopardy board and people scores
                         // button status, usernames and score
                         break;

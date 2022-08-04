@@ -9,7 +9,6 @@ public class BoardData {
         ANSWERED,
     }
 
-    public ButtonState buttonStates[][];
+    public ButtonState buttonStates[][]; // Array of status of each button the area
     public ArrayList<Player> players;
-
 }
