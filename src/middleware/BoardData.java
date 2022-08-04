@@ -11,18 +11,14 @@ public class BoardData {
         LOCKED,
         UNLOCKED,
         ANSWERED,
+
     }
     public ButtonState buttonStates[][]; // Array of status of each button the area
     public ArrayList<ClientData> clients;
-    public int columns;
-    public int rows;
 
     public BoardData() {
-        this.columns = 6;
-        this.rows = 5;
-        this.buttonStates = new ButtonState[this.columns][this.rows];
+        this.buttonStates = new ButtonState[6][5];
         this.clients = Server.GetClientsData();
-
 
         for(int column=0; column<6; column++)
             for(int row=0; row<5; row++)
@@ -30,10 +26,10 @@ public class BoardData {
 
     }
 
+
     public ButtonState[][] getButtonStates() {
         return buttonStates;
     }
-
     public ArrayList<ClientData> getClients() {
         return clients;
     }
