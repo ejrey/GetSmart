@@ -9,9 +9,9 @@ public class Question {
 
     private String correctAnswer;
 
-    private String currentAnswerer = "unlocked"; //When false, one process may get this question's info.
-    //When true, no thread may get this question's info
-
+    // Null => the question isn't being answered by anyone
+    // USERNAME => the username of the person answering the question
+    private String currentAnswerer = null;
 
     public Question(int row, int column, String question, String[] answers, String correctAnswer) {
         this.row = row;
@@ -23,9 +23,9 @@ public class Question {
 
     //tryGetQuestion
     //if this thread has this question's lock or no one does, return the question
-    public Question tryGetQuestion(String threadId) {
-        if(currentAnswerer.equals(threadId) || currentAnswerer.equals("unlocked")){
-            currentAnswerer = threadId;
+    public Question tryGetQuestion(String userName) {
+        if(currentAnswerer == null || currentAnswerer.equals(userName)) {
+            currentAnswerer = userName;
             return this;
         }
         return null;
@@ -34,8 +34,11 @@ public class Question {
     public Boolean isAnswerCorrect(String threadId, String answer) {
         if(currentAnswerer.equals(threadId) ){
             if (answer.equals(correctAnswer)){
-                currentAnswerer = "unlocked"; //after a right or wrong answer, lose the lock.
+                currentAnswerer = null;
                 return true;
+            } else {
+                currentAnswerer = null;
+                return false;
             }
         }
         return false;
