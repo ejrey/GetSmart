@@ -21,6 +21,7 @@ public class QuestionPage implements ActionListener{
     String frameName;
     String labelName;
     String[] buttonAnswers;
+    String[] originalAnswers;
     int row;
     int col;
 
@@ -28,6 +29,7 @@ public class QuestionPage implements ActionListener{
 
         frameName = "";
         labelName = question;
+        originalAnswers = answers;
         buttonAnswers = formatAnswers(answers);
         this.row = row;
         this.col = col;
@@ -99,19 +101,19 @@ public class QuestionPage implements ActionListener{
     public void actionPerformed(ActionEvent e){
         if (e.getActionCommand().equals("1")){
             questionFrame.dispose();
-            var answerData = new AnswerData(buttonAnswers[0], row, col, Client.Instance.getUsername());
+            var answerData = new AnswerData(originalAnswers[0], row, col, Client.Instance.getUsername());
             sendAnswer(answerData);
         } else if (e.getActionCommand().equals("2")){
             questionFrame.dispose();
-            var answerData = new AnswerData(buttonAnswers[1], row, col, Client.Instance.getUsername());
+            var answerData = new AnswerData(originalAnswers[1], row, col, Client.Instance.getUsername());
             sendAnswer(answerData);
         } else if (e.getActionCommand().equals("3")){
             questionFrame.dispose();
-            var answerData = new AnswerData(buttonAnswers[2], row, col, Client.Instance.getUsername());
+            var answerData = new AnswerData(originalAnswers[2], row, col, Client.Instance.getUsername());
             sendAnswer(answerData);
         } else if (e.getActionCommand().equals("4")){
             questionFrame.dispose();
-            var answerData = new AnswerData(buttonAnswers[3], row, col, Client.Instance.getUsername());
+            var answerData = new AnswerData(originalAnswers[3], row, col, Client.Instance.getUsername());
             sendAnswer(answerData);
         }
     }
