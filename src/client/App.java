@@ -22,6 +22,8 @@ public class App implements ActionListener {
     WaitingRoom waitingRoom;
     Board board;
     JTextField usernameField;
+    JTextField ipField;
+    JTextField portField;
 
     public App() {
         // Main Frame with Title Screen
@@ -56,15 +58,15 @@ public class App implements ActionListener {
         usernamePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JLabel ipLabel = new JLabel("Enter an IP address to the server:    ");
-        JTextField ipField = new JTextField(50);
+        ipField = new JTextField("localhost", 50);
         ipPanel.add(ipLabel);
         ipPanel.add(ipField);
         ipPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JLabel portLabel = new JLabel("Enter a port number to the server:    ");
-        JTextField namePortField = new JTextField(10);
+        portField = new JTextField("3000", 50);
         portPanel.add(portLabel);
-        portPanel.add(namePortField);
+        portPanel.add(portField);
         portPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         usernamePanel.setLayout(new BoxLayout(usernamePanel, BoxLayout.X_AXIS));
@@ -73,7 +75,7 @@ public class App implements ActionListener {
 
         usernameField.setMaximumSize(new Dimension(250, 25));
         ipField.setMaximumSize(new Dimension(165, 25));
-        namePortField.setMaximumSize(new Dimension(162, 25));
+        portField.setMaximumSize(new Dimension(162, 25));
 
         // Bot-Section with start button
         JPanel botPanel = new JPanel();
@@ -95,7 +97,7 @@ public class App implements ActionListener {
 
     private void LoginToServer() {
         try {
-            var socket = new Socket("localhost", 3000);
+            var socket = new Socket(ipField.getText(), Integer.parseInt(portField.getText()));
             var client = new Client(socket);
             var clientData = new ClientData();
             clientData.username = usernameField.getText();
