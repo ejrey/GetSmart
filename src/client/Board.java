@@ -1,6 +1,7 @@
 package client;
 
 import com.google.gson.Gson;
+import middleware.AnswerData;
 import middleware.BoardData;
 import middleware.ClientData;
 import middleware.Message;
@@ -66,17 +67,17 @@ public class Board implements ActionListener {
         boardPanel.add(colSix);
 
 
-        addColumnToBoardPanel(boardPanel, colOne,1, "Networking");
-        addColumnToBoardPanel(boardPanel, colTwo , 2, "Sports");
-        addColumnToBoardPanel(boardPanel, colThree, 3, "Canada");
-        addColumnToBoardPanel(boardPanel, colFour, 4, "Music");
-        addColumnToBoardPanel(boardPanel, colFive, 5, "Geography");
-        addColumnToBoardPanel(boardPanel, colSix, 6, "Animal Trivia");
+        addColumnToBoardPanel(colOne,1, "Networking");
+        addColumnToBoardPanel(colTwo , 2, "Sports");
+        addColumnToBoardPanel(colThree, 3, "Canada");
+        addColumnToBoardPanel(colFour, 4, "Music");
+        addColumnToBoardPanel(colFive, 5, "Geography");
+        addColumnToBoardPanel(colSix, 6, "Animal Trivia");
 
         mainPanel.add(boardPanel);
     }
 
-    private void addColumnToBoardPanel(JPanel boardPanel, JPanel column, int columnNumber, String columnName) {
+    private void addColumnToBoardPanel(JPanel column, int columnNumber, String columnName) {
 //        boardPanel.setLayout(new BoxLayout(boardPanel, BoxLayout.X_AXIS));
 
         // Column Name
@@ -105,28 +106,31 @@ public class Board implements ActionListener {
         }
 
         column.setLayout(new BoxLayout(column, BoxLayout.Y_AXIS));
-
     }
 
     public void handleButtonCase(BoardData boardData) {
-        switch (boardData.buttonStates[boardData.getColumn()][boardData.getRow()]) {
-            case LOCKED:
-                setButtonToLock(boardData);
-                break;
-            case UNLOCKED:
-                setButtonToUnlock(boardData);
-                break;
-            case ANSWERED:
-                setButtonToAnswered(boardData);
-                break;
-            default:
-                break;
+        for(int column=0; column<6; column++) {
+            for(int row=0; row<5; row++){
+                switch (boardData.buttonStates[column][row]) {
+                    case LOCKED:
+                        setButtonToLock(column, row);
+                        break;
+                    case UNLOCKED:
+                        setButtonToUnlock(column, row);
+                        break;
+                    case ANSWERED:
+                        setButtonToAnswered(column, row);
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
     }
 
-    public void setButtonToLock(BoardData boardData) {
-        int chosenColumn = boardData.getColumn() + 1;
-        int chosenRow = (boardData.getRow() + 1) * 100;
+    public void setButtonToLock(int column, int row) {
+        int chosenColumn = column + 1;
+        int chosenRow = (row + 1) * 100;
 
         String buttonChosen = "" + chosenColumn + "-" + chosenRow;
 
@@ -139,9 +143,9 @@ public class Board implements ActionListener {
         }
     }
 
-    public void setButtonToUnlock(BoardData boardData) {
-        int chosenColumn = boardData.getColumn() + 1;
-        int chosenRow = (boardData.getRow() + 1) * 100;
+    public void setButtonToUnlock(int column, int row) {
+        int chosenColumn = column + 1;
+        int chosenRow = (row + 1) * 100;
 
         String buttonChosen = "" + chosenColumn + "-" + chosenRow;
 
@@ -154,9 +158,9 @@ public class Board implements ActionListener {
         }
     }
 
-    public void setButtonToAnswered(BoardData boardData) {
-        int chosenColumn = boardData.getColumn() + 1;
-        int chosenRow = (boardData.getRow() + 1) * 100;
+    public void setButtonToAnswered(int column, int row) {
+        int chosenColumn = column + 1;
+        int chosenRow = (row + 1) * 100;
 
         String buttonChosen = "" + chosenColumn + "-" + chosenRow;
 
@@ -186,7 +190,8 @@ public class Board implements ActionListener {
         int row = Integer.parseInt(String.valueOf(buttonPressed.charAt(2))) - 1;
 
         int coordinates[] = {col,row};
-        Client.Instance.SendMessageToServer(new Message(Message.Action.GET_QUESTION, GSON.toJson(coordinates)));
+        AnswerData desiredQuestion = new AnswerData(row, col, Client.Instance.getUsername());
+        Client.Instance.SendMessageToServer(new Message(Message.Action.GET_QUESTION, GSON.toJson(desiredQuestion)));
     }
 
     public void hideBoard() {

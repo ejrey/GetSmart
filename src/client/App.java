@@ -19,7 +19,7 @@ public class App implements ActionListener {
     // This is the entry point of the clientside.
     public static void main(String[] args) {}
     public static final Gson GSON = new Gson();
-    private static final App Instance = new App();
+    public static final App Instance = new App();
 
     JFrame titleScreen = new JFrame();
     WaitingRoom waitingRoom;

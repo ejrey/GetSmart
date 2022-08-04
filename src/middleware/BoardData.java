@@ -14,9 +14,7 @@ public class BoardData {
 
     }
     public ButtonState buttonStates[][]; // Array of status of each button the area
-    public ArrayList<ClientData> clients;
-    public int column;
-    public int row;
+    public ArrayList<ClientData> clients; // all the clients and their scores
 
     public BoardData() {
         this.buttonStates = new ButtonState[6][5];
@@ -29,27 +27,9 @@ public class BoardData {
     }
 
 
-
-    public void setColumn(int column) {
-        this.column = column;
-    }
-
-    public void setRow(int row) {
-        this.row = row;
-    }
-
-    public int getColumn() {
-        return column;
-    }
-
-    public int getRow() {
-        return row;
-    }
-
     public ButtonState[][] getButtonStates() {
         return buttonStates;
     }
-
     public ArrayList<ClientData> getClients() {
         return clients;
     }

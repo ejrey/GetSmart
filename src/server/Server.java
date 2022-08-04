@@ -82,11 +82,23 @@ public class Server {
         var clientsData = new ArrayList<ClientData>();
         ConnectedClients.forEach((clientConnection -> {
             var data = new ClientData();
-            data.username = clientConnection.username;
+            data.username = clientConnection.username; // Server.ConnectedClients.
             data.score = clientConnection.score;
             clientsData.add(data);
         }));
         return clientsData;
+    }
+
+    //Given a username, return that client's data if they exist.
+    public ClientData getClient(String username) {
+        var clientsData = GetClientsData();
+        for(ClientData client : clientsData){
+            if(client.username.equals(username)){
+                return client;
+            }
+        }
+        //Otherwise it doesn't exist in the list.
+        return null;
     }
 
     // If everything goes wrong, let's just close and print the stack trace.
