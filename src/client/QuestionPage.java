@@ -21,6 +21,7 @@ public class QuestionPage implements ActionListener{
     String frameName;
     String labelName;
     String[] buttonAnswers;
+    String[] originalAnswers;
     int row;
     int col;
 
@@ -28,6 +29,7 @@ public class QuestionPage implements ActionListener{
 
         frameName = "";
         labelName = question;
+        originalAnswers = answers;
         buttonAnswers = formatAnswers(answers);
         this.row = row;
         this.col = col;
@@ -78,10 +80,12 @@ public class QuestionPage implements ActionListener{
     private void createQuestionPanel(String labelName, JPanel mainPanel) {
         JPanel questionTitlePanel = new JPanel();
         questionTitlePanel.setBorder(BorderFactory.createEmptyBorder(50,10,10,10));
-        questionTitlePanel.setSize(200,200);
-        JLabel questionLabel = new JLabel(labelName);
-        questionLabel.setFont(new Font("Verdana", Font.PLAIN, 50));
-        questionTitlePanel.add(questionLabel);
+        questionTitlePanel.setSize(1000,100);
+        JTextArea questionTextArea = new JTextArea(labelName);
+        questionTextArea.setLineWrap(true);
+        questionTextArea.setFont(new Font("Verdana", Font.PLAIN, 20));
+        questionTextArea.setSize(1000,100);
+        questionTitlePanel.add(questionTextArea);
         mainPanel.add(questionTitlePanel);
     }
 
@@ -97,19 +101,19 @@ public class QuestionPage implements ActionListener{
     public void actionPerformed(ActionEvent e){
         if (e.getActionCommand().equals("1")){
             questionFrame.dispose();
-            var answerData = new AnswerData("1", row, col, Client.Instance.getUsername());
+            var answerData = new AnswerData(originalAnswers[0], row, col, Client.Instance.getUsername());
             sendAnswer(answerData);
         } else if (e.getActionCommand().equals("2")){
             questionFrame.dispose();
-            var answerData = new AnswerData("2", row, col, Client.Instance.getUsername());
+            var answerData = new AnswerData(originalAnswers[1], row, col, Client.Instance.getUsername());
             sendAnswer(answerData);
         } else if (e.getActionCommand().equals("3")){
             questionFrame.dispose();
-            var answerData = new AnswerData("3", row, col, Client.Instance.getUsername());
+            var answerData = new AnswerData(originalAnswers[2], row, col, Client.Instance.getUsername());
             sendAnswer(answerData);
         } else if (e.getActionCommand().equals("4")){
             questionFrame.dispose();
-            var answerData = new AnswerData("4", row, col, Client.Instance.getUsername());
+            var answerData = new AnswerData(originalAnswers[3], row, col, Client.Instance.getUsername());
             sendAnswer(answerData);
         }
     }
