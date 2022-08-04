@@ -14,7 +14,7 @@ public class BoardData {
 
     }
     public ButtonState buttonStates[][]; // Array of status of each button the area
-    public ArrayList<ClientData> clients;
+    public ArrayList<ClientData> clients; // all the clients and their scores
 
     public BoardData() {
         this.buttonStates = new ButtonState[6][5];
@@ -32,17 +32,6 @@ public class BoardData {
     }
     public ArrayList<ClientData> getClients() {
         return clients;
-    }
-
-    //Given a username, return that client's data if they exist.
-    public ClientData getClient(String username) {
-        for(ClientData client : clients){
-            if(client.username.equals(username)){
-                return client;
-            }
-        }
-        //Otherwise it doesn't exist in the list.
-        return null;
     }
 
 }

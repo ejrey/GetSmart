@@ -77,20 +77,16 @@ public class ClientConnection implements Runnable {
                         //check if the answer is correct, if so award this player points based on the question row.
                         //update the question to be unlocked if wrong or answered if correct, and broadcast the new board state.
                         //TODO: the above
+                        System.out.println("test1");
                         var guess = GSON.fromJson(message.data, AnswerData.class);
-                        var  player = BoardData.getClient(guess.username);
-                        if(player == null){
-                            //If the player doesn't exist, they can never get a question right. unlock the question and broadcast the update
-                            BoardData.buttonStates[guess.col][guess.row] = middleware.BoardData.ButtonState.UNLOCKED;
-                            Broadcast(new Message(Message.Action.UPDATE_BOARD, GSON.toJson(BoardData)));
-                            break;
-                        }
                         Question questionToAnswer = Questions.getQuestion(guess.col, guess.row,guess.username);
+                        System.out.println("we here");
                         if(questionToAnswer.isAnswerCorrect(guess.username, guess.answer)){
                             //the right answer
                             //give the player points
-                            player.gainPoints(questionToAnswer.getRow());
-                            //Set the question to Answered, unclickable
+                            score += (questionToAnswer.getRow()+1)*100;
+                            //Server.ConnectedClients
+                            BoardData.clients = Server.GetClientsData();
                             BoardData.buttonStates[guess.col][guess.row] = middleware.BoardData.ButtonState.ANSWERED;
                             Broadcast(new Message(Message.Action.UPDATE_BOARD, GSON.toJson(BoardData)));
                             System.out.println("RIGHT");
