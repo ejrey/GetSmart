@@ -1,6 +1,7 @@
 package client;
 
 import com.google.gson.Gson;
+import middleware.BoardData;
 import middleware.ClientData;
 import middleware.Message;
 
@@ -107,8 +108,8 @@ public class App implements ActionListener {
         } catch (IOException ignored) {}
     }
 
-    public static void GoToQuestionPage(String question, int row, int col, String[] answers, Client client) {
-        new QuestionPage(question, row, col, answers, client);
+    public static void GoToQuestionPage(String question, int row, int col, String[] answers) {
+        new QuestionPage(question, row, col, answers);
         //board.dispose(); talk to daniel and eric
     }
 
@@ -135,6 +136,18 @@ public class App implements ActionListener {
         SwingUtilities.invokeLater(() -> {
             Instance.board = new Board(clientsData);
             Instance.waitingRoom.Dispose();
+        });
+    }
+
+    public static void SetBoardInvisible() {
+        SwingUtilities.invokeLater(() -> {
+            Instance.board.hideBoard();
+        });
+    }
+
+    public static void setButtonOnBoardToState(BoardData boardData) {
+        SwingUtilities.invokeLater(() -> {
+            Instance.board.handleButtonCase(boardData);
         });
     }
 

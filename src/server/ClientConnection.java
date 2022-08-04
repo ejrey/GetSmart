@@ -1,5 +1,7 @@
 package server;
 
+import client.Board;
+import middleware.BoardData;
 import middleware.ClientData;
 import middleware.Message;
 
@@ -15,6 +17,7 @@ public class ClientConnection implements Runnable {
     public BufferedWriter bufferedWriter; // Used to write to the client
     public BufferedReader bufferedReader; // Used to read data from the client
     public String username;
+    public Integer score;
     private Socket socket;
     public Questions Questions;
 
@@ -55,12 +58,29 @@ public class ClientConnection implements Runnable {
                     case GET_QUESTION:
                         //this query from the client passes in an int array of the column then the row of a desired question
                         //The response to the client is a Question object.
-                        System.out.println(message.data);
+
                         var rowAndColumn = GSON.fromJson(message.data, int[].class);
+                        var row = rowAndColumn[1];
+                        var column = rowAndColumn[0];
                         var questions = new Questions(6,5);
-                        Question q = questions.getQuestion(rowAndColumn[0],rowAndColumn[1]);
-                        System.out.println(q);
+                        Question q = questions.getQuestion(column, row);
+
+
+                        // Send the question to user
                         To(username, new Message(Message.Action.QUESTION_DATA_RECEIVED, GSON.toJson(q)));
+                        //Set button state to LOCKED
+                        BoardData.buttonStates[column][row] = middleware.BoardData.ButtonState.LOCKED;
+                        // Set the column and row of the button pressed by user
+                        BoardData.setColumn(column);
+                        BoardData.setRow(row);
+                        // Send data to board
+                        Broadcast(new Message(Message.Action.UPDATE_BOARD, GSON.toJson(BoardData)));
+
+//                        if (BoardData.buttonStates[column][row] == middleware.BoardData.ButtonState.UNLOCKED) {
+//                            To(username, new Message(Message.Action.QUESTION_DATA_RECEIVED, GSON.toJson(q)));
+//                            BoardData.buttonStates[column][row] = middleware.BoardData.ButtonState.LOCKED;
+//                            Broadcast(new Message(Message.Action.UPDATE_BOARD, GSON.toJson(BoardData)));
+//                        }
                         break;
                     case IGNORE:
                         break;
