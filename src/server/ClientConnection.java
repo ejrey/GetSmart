@@ -87,7 +87,6 @@ public class ClientConnection implements Runnable {
                             //the right answer
                             //give the player points
                             score += (questionToAnswer.getRow()+1)*100;
-                            //Server.ConnectedClients
                             BoardData.clients = Server.GetClientsData();
                             BoardData.buttonStates[guess.col][guess.row] = middleware.BoardData.ButtonState.ANSWERED;
                             Broadcast(new Message(Message.Action.UPDATE_BOARD, GSON.toJson(BoardData)));

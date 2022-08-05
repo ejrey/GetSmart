@@ -112,7 +112,6 @@ public class App implements ActionListener {
 
     public static void GoToQuestionPage(String question, int row, int col, String[] answers) {
         new QuestionPage(question, row, col, answers);
-        //board.dispose(); talk to daniel and eric
     }
 
     @Override
@@ -139,15 +138,11 @@ public class App implements ActionListener {
     }
 
     public static void SetBoardInvisible() {
-        SwingUtilities.invokeLater(() -> {
-            Instance.board.hideBoard();
-        });
+        SwingUtilities.invokeLater(() -> Instance.board.hideBoard());
     }
 
-    public static void setButtonOnBoardToState(BoardData boardData) {
-        SwingUtilities.invokeLater(() -> {
-            Instance.board.handleButtonCase(boardData);
-        });
+    public static void updateBoardScreen(BoardData boardData) {
+        SwingUtilities.invokeLater(() -> Instance.board.handleButtonCase(boardData));
     }
 
     public static void UpdateWaitingRoomUserNames(ArrayList<ClientData> clients) {

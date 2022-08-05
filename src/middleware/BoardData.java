@@ -1,10 +1,8 @@
 package middleware;
 
-import server.Question;
 import server.Server;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class BoardData {
     public enum ButtonState {
@@ -13,7 +11,7 @@ public class BoardData {
         ANSWERED,
 
     }
-    public ButtonState buttonStates[][]; // Array of status of each button the area
+    public ButtonState[][] buttonStates; // Array of status of each button the area
     public ArrayList<ClientData> clients; // all the clients and their scores
 
     public BoardData() {
@@ -26,12 +24,7 @@ public class BoardData {
 
     }
 
-
-    public ButtonState[][] getButtonStates() {
-        return buttonStates;
-    }
     public ArrayList<ClientData> getClients() {
         return clients;
     }
-
 }

@@ -1,13 +1,11 @@
 package server;
-import com.google.gson.Gson;
 
 public class Question {
     private int row; // row the question appears on
     private int column; // row the question appears on
-    private String question;
-    private String[] answers;
-
-    private String correctAnswer;
+    private final String question;
+    private final String[] answers;
+    private final String correctAnswer;
 
     // Null => the question isn't being answered by anyone
     // USERNAME => the username of the person answering the question
@@ -65,21 +63,7 @@ public class Question {
         return question;
     }
 
-    public void setQuestion(String question) {
-        this.question = question;
-    }
-
     public String[] getAnswers() {
         return answers;
-    }
-
-    public void setAnswers(String[] answers) {
-        this.answers = answers;
-    }
-
-    //make sure setCorrectAnswer is ONLY used when initializing the right answers
-    //TODO: maybe refactor the right answers to be completely separate from the Question class.
-    public void setCorrectAnswer(String correctAnswer) {
-        this.correctAnswer = correctAnswer;
     }
 }

@@ -6,7 +6,6 @@ public class Message {
         SET_USERNAME, // ClientData
         SEND_TO_WAITING_ROOM, // ClientData
         WAITING_ROOM_UPDATE_USERNAMES, // ArrayList of ClientData
-
         GET_QUESTION, //Client-to-Server, used when client clicks a question button. invokes SEND_TO_QUESTION_PAGE
         SEND_TO_BOARD, // ArrayList of ClientData of usernames
         START_GAME, // empty

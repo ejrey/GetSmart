@@ -15,9 +15,12 @@ import java.util.ArrayList;
 public class Board implements ActionListener {
 
     JFrame mainFrame = new JFrame();
-    JLabel usernameText;
     JPanel boardPanel = new JPanel(new GridBagLayout());
     ArrayList<JButton> buttons = new ArrayList<>();
+    ArrayList<JLabel> username = new ArrayList<>();
+    JPanel mainPanel = new JPanel();
+    JPanel player = new JPanel();
+    JPanel usernamePanel = new JPanel();
 
     public static final Gson GSON = new Gson();
 
@@ -26,7 +29,6 @@ public class Board implements ActionListener {
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setVisible(true);
 
-        JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         mainFrame.add(mainPanel);
 
@@ -37,21 +39,19 @@ public class Board implements ActionListener {
         titlePanel.add(title);
         mainPanel.add(titlePanel);
 
-        JPanel usernamePanel = new JPanel();
         titlePanel.add(usernamePanel, BorderLayout.AFTER_LAST_LINE);
 
         // ADDING A USERNAME
-        for (int i = 0; i < clientsData.size(); i++) {
-            JLabel usernameText = new JLabel(clientsData.get(i).username);
+        for (ClientData clientsDatum : clientsData) {
+            var usernameText = new JLabel(clientsDatum.username + ": " + clientsDatum.score);
             usernameText.setFont(new Font("Verdana", Font.PLAIN, 40));
-            JPanel player = new JPanel();
             usernamePanel.add(player);
             player.add(usernameText);
+            username.add(usernameText);
         }
         mainPanel.add(usernamePanel);
 
         //Board Components
-//        JPanel boardPanel = new JPanel(new GridBagLayout());
         JPanel colOne = new JPanel();
         JPanel colTwo = new JPanel();
         JPanel colThree = new JPanel();
@@ -66,7 +66,6 @@ public class Board implements ActionListener {
         boardPanel.add(colFive);
         boardPanel.add(colSix);
 
-
         addColumnToBoardPanel(colOne,1, "Networking");
         addColumnToBoardPanel(colTwo , 2, "Sports");
         addColumnToBoardPanel(colThree, 3, "Canada");
@@ -78,17 +77,15 @@ public class Board implements ActionListener {
     }
 
     private void addColumnToBoardPanel(JPanel column, int columnNumber, String columnName) {
-//        boardPanel.setLayout(new BoxLayout(boardPanel, BoxLayout.X_AXIS));
-
         // Column Name
-        JLabel columnTitle = new JLabel("" + columnName);
+        JLabel columnTitle = new JLabel("" + columnName, SwingConstants.CENTER);
         columnTitle.setFont(new Font("Verdana", Font.PLAIN, 20));
         columnTitle.setHorizontalAlignment(JLabel.CENTER);
         column.add(columnTitle);
 
         // Assigning buttons onto columns
         int pointValue = 100;
-        for (int i = 0; i < 5; i++) {;
+        for (int i = 0; i < 5; i++) {
             JButton buttonQuestion = new JButton("" + pointValue);
             buttonQuestion.setActionCommand(columnNumber + "-" + pointValue);
             pointValue = pointValue + 100;
@@ -102,27 +99,24 @@ public class Board implements ActionListener {
 
             column.add(buttonQuestion);
             buttons.add(buttonQuestion);
-            buttonQuestion.addActionListener((ActionListener) this);
+            buttonQuestion.addActionListener(this);
         }
 
         column.setLayout(new BoxLayout(column, BoxLayout.Y_AXIS));
     }
 
     public void handleButtonCase(BoardData boardData) {
+
+        for (int i = 0; i < boardData.getClients().size(); i++)
+            username.get(i).setText(boardData.getClients().get(i).username + ": " + boardData.getClients().get(i).score);
+
         for(int column=0; column<6; column++) {
             for(int row=0; row<5; row++){
                 switch (boardData.buttonStates[column][row]) {
-                    case LOCKED:
-                        setButtonToLock(column, row);
-                        break;
-                    case UNLOCKED:
-                        setButtonToUnlock(column, row);
-                        break;
-                    case ANSWERED:
-                        setButtonToAnswered(column, row);
-                        break;
-                    default:
-                        break;
+                    case LOCKED -> setButtonToLock(column, row);
+                    case UNLOCKED -> setButtonToUnlock(column, row);
+                    case ANSWERED -> setButtonToAnswered(column, row);
+                    default -> {}
                 }
             }
         }
@@ -134,9 +128,9 @@ public class Board implements ActionListener {
 
         String buttonChosen = "" + chosenColumn + "-" + chosenRow;
 
-        for (int i = 0; i < buttons.size(); i++) {
-            if (buttons.get(i).getActionCommand().equals(buttonChosen)) {
-                Component component = buttons.get(i);
+        for (JButton button : buttons) {
+            if (button.getActionCommand().equals(buttonChosen)) {
+                Component component = button;
                 component.setBackground(Color.RED);
                 component.setEnabled(false);
             }
@@ -149,9 +143,9 @@ public class Board implements ActionListener {
 
         String buttonChosen = "" + chosenColumn + "-" + chosenRow;
 
-        for (int i = 0; i < buttons.size(); i++) {
-            if (buttons.get(i).getActionCommand().equals(buttonChosen)) {
-                Component component = buttons.get(i);
+        for (JButton button : buttons) {
+            if (button.getActionCommand().equals(buttonChosen)) {
+                Component component = button;
                 component.setBackground(null);
                 component.setEnabled(true);
             }
@@ -171,15 +165,6 @@ public class Board implements ActionListener {
                 component.setEnabled(false);
             }
         }
-    }
-
-    public void UpdateBoardUsernames(ArrayList<ClientData> clients) {
-        StringBuilder stringBuilder = new StringBuilder();
-        clients.forEach((clientData -> {
-            stringBuilder.append(clientData.username);
-            stringBuilder.append(" ");
-        }));
-        usernameText.setText(stringBuilder.toString());
     }
 
     @Override
