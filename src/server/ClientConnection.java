@@ -34,7 +34,7 @@ public class ClientConnection implements Runnable {
     }
 
     // The thread that is running for the connected client. It's an infinite while loop that listens to message from
-    // the client socket.
+    // the client socket. This is also the place that we handle the shared object within our game.
     @Override
     public void run() {
         String incomingMessageFromClient;
@@ -56,23 +56,23 @@ public class ClientConnection implements Runnable {
                         Broadcast(new Message(Message.Action.SEND_TO_BOARD, GSON.toJson(Server.GetClientsData())));
                         break;
                     case GET_QUESTION:
+                        // The question that is being requested.
                         var questionRequest = GSON.fromJson(message.data, AnswerData.class);
                         Question q = Questions.tryGetQuestion(questionRequest.col, questionRequest.row, questionRequest.username);
 
+                        // If null, this means that the question is locked, and we shouldn't proceed any further.
                         if (q == null){
-                            //the question is locked. Simply broadcast the board's current state.
                             Broadcast(new Message(Message.Action.UPDATE_BOARD, GSON.toJson(BoardData)));
                             break;
                         }
 
+                        // If we reach this point, the question is locked to the specific username answering the question.
                         QuestionData questionData = new QuestionData(q.getColumn(), q.getRow(), q.getQuestion(), q.getAnswers());
-
-                        // Otherwise, send the question to user
+                        // Send the question to the specific user.
                         To(username, new Message(Message.Action.QUESTION_DATA_RECEIVED, GSON.toJson(questionData)));
-
-                        //Then, set button state to LOCKED since a user is now in the question
+                        // Update the button as locked.
                         BoardData.buttonStates[q.getColumn()][q.getRow()] = middleware.BoardData.ButtonState.LOCKED;
-                        // Update everyone's board
+                        // Let everyone know that the button is now locked.
                         Broadcast(new Message(Message.Action.UPDATE_BOARD, GSON.toJson(BoardData)));
                         break;
 

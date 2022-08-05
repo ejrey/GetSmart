@@ -28,7 +28,7 @@ public class BoardData {
         for(int column=0; column<6; column++)
             for(int row=0; row<5; row++)
                 if (buttonStates[column][row] != ButtonState.ANSWERED)
-                    return true; // change to false for production.
+                    return false; // change to false for production.
 
         return true;
     }

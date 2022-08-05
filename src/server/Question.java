@@ -19,8 +19,8 @@ public class Question {
         this.correctAnswer = correctAnswer;
     }
 
-    //tryGetQuestion
-    //if this thread has this question's lock or no one does, return the question
+    // Check to see if this shared object is already being used by someone else.
+    // Return null if nobody is currently accessing this shared object.
     public Question tryGetQuestion(String userName) {
         if(currentAnswerer == null || currentAnswerer.equals(userName)) {
             currentAnswerer = userName;
@@ -29,6 +29,8 @@ public class Question {
         return null;
     }
 
+    // Check to see if the answer is correct, we should unlock the question regardless of whether the
+    // client got the answer correct.
     public Boolean isAnswerCorrect(String username, String answer) {
         if(currentAnswerer.equals(username) ){
             if (answer.equals(correctAnswer)){
