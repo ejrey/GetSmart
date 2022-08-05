@@ -1,17 +1,15 @@
 package server;
-import com.google.gson.Gson;
 
 public class Question {
     private int row; // row the question appears on
     private int column; // row the question appears on
-    private String question;
-    private String[] answers;
+    private final String question;
+    private final String[] answers;
+    private final String correctAnswer;
 
-    private String correctAnswer;
-
-    private String currentAnswerer = ""; //When false, one process may get this question's info.
-    //When true, no thread may get this question's info
-
+    // Null => the question isn't being answered by anyone
+    // USERNAME => the username of the person answering the question
+    private String currentAnswerer = null;
 
     public Question(int row, int column, String question, String[] answers, String correctAnswer) {
         this.row = row;
@@ -23,22 +21,22 @@ public class Question {
 
     //tryGetQuestion
     //if this thread has this question's lock or no one does, return the question
-    public String tryGetQuestion(String threadId) {
-        if(currentAnswerer.equals(threadId) || currentAnswerer.equals("")){
-            currentAnswerer = threadId;
-            Gson gson = new Gson();
-            String json = gson.toJson(this);
-            System.out.println(json);
-            return json;
+    public Question tryGetQuestion(String userName) {
+        if(currentAnswerer == null || currentAnswerer.equals(userName)) {
+            currentAnswerer = userName;
+            return this;
         }
         return null;
     }
 
-    public Boolean isAnswerCorrect(String threadId, String answer) {
-        if(currentAnswerer.equals(threadId) ){
+    public Boolean isAnswerCorrect(String username, String answer) {
+        if(currentAnswerer.equals(username) ){
             if (answer.equals(correctAnswer)){
-                currentAnswerer = ""; //after a right or wrong answer, lose the lock.
+                currentAnswerer = null;
                 return true;
+            } else {
+                currentAnswerer = null;
+                return false;
             }
         }
         return false;
@@ -65,21 +63,7 @@ public class Question {
         return question;
     }
 
-    public void setQuestion(String question) {
-        this.question = question;
-    }
-
     public String[] getAnswers() {
         return answers;
-    }
-
-    public void setAnswers(String[] answers) {
-        this.answers = answers;
-    }
-
-    //make sure setCorrectAnswer is ONLY used when initializing the right answers
-    //TODO: maybe refactor the right answers to be completely separate from the Question class.
-    public void setCorrectAnswer(String correctAnswer) {
-        this.correctAnswer = correctAnswer;
     }
 }

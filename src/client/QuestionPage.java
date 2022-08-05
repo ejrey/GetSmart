@@ -1,7 +1,3 @@
-// QuestionPage takes in a string that is a question, a string that is the question number, and then an array of answers
-// Array size should be 4 & and should have only 4 answers.
-// If we want to change the amount of answers then we will need to change some numbers but it's not a huge issue
-
 package client;
 
 import com.google.gson.Gson;
@@ -18,19 +14,19 @@ public class QuestionPage implements ActionListener{
     public static final Gson GSON = new Gson();
 
     JFrame questionFrame;
-    Client client;
     String frameName;
     String labelName;
     String[] buttonAnswers;
+    String[] originalAnswers;
     int row;
     int col;
 
-    public QuestionPage(String question, int row, int col, String[] answers, Client client) {
+    public QuestionPage(String question, int row, int col, String[] answers) {
 
         frameName = "";
         labelName = question;
+        originalAnswers = answers;
         buttonAnswers = formatAnswers(answers);
-        this.client = client;
         this.row = row;
         this.col = col;
 
@@ -80,10 +76,12 @@ public class QuestionPage implements ActionListener{
     private void createQuestionPanel(String labelName, JPanel mainPanel) {
         JPanel questionTitlePanel = new JPanel();
         questionTitlePanel.setBorder(BorderFactory.createEmptyBorder(50,10,10,10));
-        questionTitlePanel.setSize(200,200);
-        JLabel questionLabel = new JLabel(labelName);
-        questionLabel.setFont(new Font("Verdana", Font.PLAIN, 50));
-        questionTitlePanel.add(questionLabel);
+        questionTitlePanel.setSize(1000,100);
+        JTextArea questionTextArea = new JTextArea(labelName);
+        questionTextArea.setLineWrap(true);
+        questionTextArea.setFont(new Font("Verdana", Font.PLAIN, 20));
+        questionTextArea.setSize(1000,100);
+        questionTitlePanel.add(questionTextArea);
         mainPanel.add(questionTitlePanel);
     }
 
@@ -95,34 +93,33 @@ public class QuestionPage implements ActionListener{
         return tempArray;
     }
 
-//    public static void main(String[] args){
-//        String[] arr = new String[]{"Yo", "Hi", "Sup", "Hey"};
-//        new QuestionPage("Question here", 1, 1, arr);
-//    }
-
     @Override
     public void actionPerformed(ActionEvent e){
         if (e.getActionCommand().equals("1")){
             questionFrame.dispose();
-            var answerData = new AnswerData("1", row, col, client.getUsername());
-            emptyFunction(answerData);
+            var answerData = new AnswerData(originalAnswers[0], row, col, Client.Instance.getUsername());
+            sendAnswer(answerData);
         } else if (e.getActionCommand().equals("2")){
             questionFrame.dispose();
-            var answerData = new AnswerData("2", row, col, client.getUsername());
-            emptyFunction(answerData);
+            var answerData = new AnswerData(originalAnswers[1], row, col, Client.Instance.getUsername());
+            sendAnswer(answerData);
         } else if (e.getActionCommand().equals("3")){
             questionFrame.dispose();
-            var answerData = new AnswerData("3", row, col, client.getUsername());
-            emptyFunction(answerData);
+            var answerData = new AnswerData(originalAnswers[2], row, col, Client.Instance.getUsername());
+            sendAnswer(answerData);
         } else if (e.getActionCommand().equals("4")){
             questionFrame.dispose();
-            var answerData = new AnswerData("4", row, col, client.getUsername());
-            emptyFunction(answerData);
+            var answerData = new AnswerData(originalAnswers[3], row, col, Client.Instance.getUsername());
+            sendAnswer(answerData);
         }
     }
 
-    private void emptyFunction(AnswerData answerData){
-        client.SendMessageToServer(new Message(Message.Action.SEND_ANSWER_TO_SERVER, GSON.toJson(answerData)));
+    private void sendAnswer(AnswerData answerData){
+        Client.Instance.SendMessageToServer(new Message(Message.Action.SEND_ANSWER_TO_SERVER, GSON.toJson(answerData)));
+        showBoard();
+    }
+    public void showBoard() {
+        App.Instance.board.mainFrame.setVisible(true);
     }
 
 }

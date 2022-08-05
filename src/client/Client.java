@@ -1,6 +1,7 @@
 package client;
 
 import com.google.gson.reflect.TypeToken;
+import middleware.BoardData;
 import middleware.ClientData;
 import middleware.Message;
 import middleware.QuestionData;
@@ -11,12 +12,13 @@ import java.util.ArrayList;
 
 import static server.Server.GSON;
 
+// This class represents a current client connection to a server running on a separate thread.
 public class Client implements Runnable  {
     public static Client Instance;
     private Socket socket;
     private BufferedWriter bufferedWriter; // Used to write to the server
     private BufferedReader bufferedReader; // Used to read from the server
-    private String username;
+    private String username; // The client's username
 
     public String getUsername() {
         return username;
@@ -33,6 +35,7 @@ public class Client implements Runnable  {
         }
     }
 
+    // Send a message to the server.
     public void SendMessageToServer(Message message) {
         try {
             bufferedWriter.write(Message.Encode(message));
@@ -43,6 +46,7 @@ public class Client implements Runnable  {
         }
     }
 
+    // The thread that is running in the background listening to messages from the server.
     @Override
     public void run() {
         String incomingMessageFromServer;
@@ -67,14 +71,21 @@ public class Client implements Runnable  {
                         App.UpdateWaitingRoomUserNames(waitingClientData);
                         break;
                     case QUESTION_DATA_RECEIVED:
+                        // The client receives this event when the server wants it to go to the question page
                         var questionData = GSON.fromJson(message.data, QuestionData.class);
-                        System.out.println(questionData);
-                        App.GoToQuestionPage(questionData.question, questionData.row, questionData.col, questionData.answers, this);
+                        App.SetBoardInvisible();
+                        App.GoToQuestionPage(questionData.question, questionData.row, questionData.col, questionData.answers);
                         break;
                     case UPDATE_BOARD:
+                        // Listen to whenever the server tells us to update this board.
+                        var boardData = GSON.fromJson(message.data, BoardData.class);
+                        App.updateBoardScreen(boardData);
                         // Re-render the jeopardy board and people scores
                         // button status, usernames and score
                         break;
+                    case GAME_FINISHED:
+                        ArrayList<ClientData> clientsData = GSON.fromJson(message.data, new TypeToken<ArrayList<ClientData>>(){}.getType());
+                        App.GoToResults(clientsData);
                     case IGNORE:
                         break;
                 }
@@ -84,6 +95,7 @@ public class Client implements Runnable  {
         }
     }
 
+    // Close everything correctly if anything goes wrong.
     private void Close(Socket socket, BufferedWriter bufferedWriter, BufferedReader bufferedReader) {
         try {
             if (bufferedWriter != null) {

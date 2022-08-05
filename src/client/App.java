@@ -1,6 +1,7 @@
 package client;
 
 import com.google.gson.Gson;
+import middleware.BoardData;
 import middleware.ClientData;
 import middleware.Message;
 
@@ -12,16 +13,20 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 
+// This is the class that handles the Java Swing interface.
 public class App implements ActionListener {
 
+    // This is the entry point of the clientside.
     public static void main(String[] args) {}
     public static final Gson GSON = new Gson();
-    private static final App Instance = new App();
+    public static final App Instance = new App();
 
     JFrame titleScreen = new JFrame();
     WaitingRoom waitingRoom;
     Board board;
     JTextField usernameField;
+    JTextField ipField;
+    JTextField portField;
 
     public App() {
         // Main Frame with Title Screen
@@ -56,15 +61,15 @@ public class App implements ActionListener {
         usernamePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JLabel ipLabel = new JLabel("Enter an IP address to the server:    ");
-        JTextField ipField = new JTextField(50);
+        ipField = new JTextField("localhost", 50);
         ipPanel.add(ipLabel);
         ipPanel.add(ipField);
         ipPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JLabel portLabel = new JLabel("Enter a port number to the server:    ");
-        JTextField namePortField = new JTextField(10);
+        portField = new JTextField("3000", 50);
         portPanel.add(portLabel);
-        portPanel.add(namePortField);
+        portPanel.add(portField);
         portPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         usernamePanel.setLayout(new BoxLayout(usernamePanel, BoxLayout.X_AXIS));
@@ -73,7 +78,7 @@ public class App implements ActionListener {
 
         usernameField.setMaximumSize(new Dimension(250, 25));
         ipField.setMaximumSize(new Dimension(165, 25));
-        namePortField.setMaximumSize(new Dimension(162, 25));
+        portField.setMaximumSize(new Dimension(162, 25));
 
         // Bot-Section with start button
         JPanel botPanel = new JPanel();
@@ -95,7 +100,7 @@ public class App implements ActionListener {
 
     private void LoginToServer() {
         try {
-            var socket = new Socket("localhost", 3000);
+            var socket = new Socket(ipField.getText(), Integer.parseInt(portField.getText()));
             var client = new Client(socket);
             var clientData = new ClientData();
             clientData.username = usernameField.getText();
@@ -105,9 +110,8 @@ public class App implements ActionListener {
         } catch (IOException ignored) {}
     }
 
-    public static void GoToQuestionPage(String question, int row, int col, String[] answers, Client client) {
-        new QuestionPage(question, row, col, answers, client);
-        //board.dispose(); talk to daniel and eric
+    public static void GoToQuestionPage(String question, int row, int col, String[] answers) {
+        new QuestionPage(question, row, col, answers);
     }
 
     @Override
@@ -118,10 +122,7 @@ public class App implements ActionListener {
             System.exit(0);
         }
     }
-
-    // TODO: We should put every type of screen inside of this single class.
-    // If you want to call any UI change, it needs to be inside of "SwingUtilities.invokeLater"!
-    // You can use "Instance." to access the original App instance.
+    
     public static void GoToWaitingRoom() {
         SwingUtilities.invokeLater(() -> {
             Instance.waitingRoom = new WaitingRoom();
@@ -134,6 +135,21 @@ public class App implements ActionListener {
             Instance.board = new Board(clientsData);
             Instance.waitingRoom.Dispose();
         });
+    }
+
+    public static void GoToResults(ArrayList<ClientData> clientsData) {
+        SwingUtilities.invokeLater(() -> {
+            Instance.board.hideBoard();
+            new Results(clientsData);
+        });
+    }
+
+    public static void SetBoardInvisible() {
+        SwingUtilities.invokeLater(() -> Instance.board.hideBoard());
+    }
+
+    public static void updateBoardScreen(BoardData boardData) {
+        SwingUtilities.invokeLater(() -> Instance.board.handleButtonCase(boardData));
     }
 
     public static void UpdateWaitingRoomUserNames(ArrayList<ClientData> clients) {

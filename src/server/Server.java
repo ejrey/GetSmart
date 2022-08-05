@@ -1,6 +1,7 @@
 package server;
 
 import com.google.gson.Gson;
+import middleware.BoardData;
 import middleware.ClientData;
 import middleware.Message;
 
@@ -8,10 +9,12 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 
+// This class is the main thread that runs the server.
 public class Server {
-    public static final Gson GSON = new Gson();
-    public static ArrayList<ClientConnection> ConnectedClients = new ArrayList<>();
-    public Questions Questions = new Questions(5,6);
+    public static final Gson GSON = new Gson(); // GSON instance to assist us with converting to and from JSON
+    public static ArrayList<ClientConnection> ConnectedClients = new ArrayList<>(); // List of all currently connected clients
+    public static Questions Questions = new Questions(6,5); // The questions that the clients will be served
+    public static BoardData BoardData = new BoardData(); // The current state of the board
 
     private final ServerSocket serverSocket;
 
@@ -19,20 +22,22 @@ public class Server {
         this.serverSocket = serverSocket;
     }
 
+    // This is the entry point to start the server. If you'd like to provide a custom port, you can provide a
+    // program argument. Otherwise, the server will by default host on the port 3000.
     public static void main(String[] args) throws IOException {
-        var serverSocket = new ServerSocket(3000); // Might want to pass in port as command arg
+        var port = args.length == 0 ? 3000 : Integer.parseInt(args[0]);
+        var serverSocket = new ServerSocket(port);
         var server = new Server(serverSocket);
         server.Start();
     }
 
+    // The server starts and begins to listen to new socket connections. If we receive a new connection, let's start a
+    // new thread for the connecting client.
     public void Start() {
-        //initialize Questions.
-        //this.Questions.getQuestion(1,2);
-//        this.Questions.initializeQuestions();
         try {
             while (!serverSocket.isClosed()) {
                 var socket = serverSocket.accept();
-                var clientConnection = new ClientConnection(socket,Questions);
+                var clientConnection = new ClientConnection(socket);
 
                 var thread = new Thread(clientConnection);
                 thread.start();
@@ -42,7 +47,8 @@ public class Server {
         }
     }
 
-    // Sends a message to every connected client.
+    // Broadcast sends a message to every single connect client. We use our middleware "Message" class to standardize
+    // the way we send messages between the server and client.
     public static void Broadcast(Message message) {
         ConnectedClients.forEach((client -> {
             try {
@@ -55,7 +61,7 @@ public class Server {
         }));
     }
 
-    // Sends a message to a specific user.
+    // Send a message to a specific client. Each client has a unique username that is used as the identifier.
     public static void To(String username, Message message) {
         for (ClientConnection client : ConnectedClients) {
             if (client.username.equals(username)) {
@@ -70,17 +76,20 @@ public class Server {
         }
     }
 
+    // Get the current data of every single client that is currently connected. We use this to send down information
+    // such as client usernames and their current scores.
     public static ArrayList<ClientData> GetClientsData() {
         var clientsData = new ArrayList<ClientData>();
         ConnectedClients.forEach((clientConnection -> {
             var data = new ClientData();
-            data.username = clientConnection.username;
+            data.username = clientConnection.username; // Server.ConnectedClients.
+            data.score = clientConnection.score;
             clientsData.add(data);
         }));
         return clientsData;
     }
 
-//The concept of a question from the server
+    // If everything goes wrong, let's just close and print the stack trace.
     private void Close() {
         try {
             if (serverSocket != null) {

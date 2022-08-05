@@ -1,37 +1,40 @@
 package server;
 
+import middleware.AnswerData;
 import middleware.ClientData;
 import middleware.Message;
+import middleware.QuestionData;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.ArrayList;
 
 import static server.Server.*;
 
+// This class represents a current client connection to a server running on a separate thread.
 public class ClientConnection implements Runnable {
-
-    // Talk from Server to a client.
     public BufferedWriter bufferedWriter; // Used to write to the client
     public BufferedReader bufferedReader; // Used to read data from the client
-    public String username;
+    public String username; // Client's username
+    public Integer score = 0; // Client's score
     private Socket socket;
-    public Questions Questions;
 
-    public ClientConnection(Socket socket, Questions qs) {
-        this.Questions = qs;
+    // We pass in the socket connection of the client and setup bufferedWriter and bufferedReader to facilitate
+    // communication to and from the server.
+    public ClientConnection(Socket socket) {
         try {
             this.socket = socket;
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
+            // Let the server know that we have a new client to track.
             ConnectedClients.add(this);
         } catch (IOException e) {
             Close();
         }
     }
 
-    // Loop to get message from Client that is running on a thread.
+    // The thread that is running for the connected client. It's an infinite while loop that listens to message from
+    // the client socket.
     @Override
     public void run() {
         String incomingMessageFromClient;
@@ -53,21 +56,51 @@ public class ClientConnection implements Runnable {
                         Broadcast(new Message(Message.Action.SEND_TO_BOARD, GSON.toJson(Server.GetClientsData())));
                         break;
                     case GET_QUESTION:
-                        //this query from the client passes in an int array of the column then the row of a desired question
-                        //The response to the client is a Question object.
-                        System.out.println(message.data);
-                        var rowAndColumn = GSON.fromJson(message.data, int[].class);
-                        var questions = new Questions(6,5);
-                        Question q = questions.getQuestion(rowAndColumn[0],rowAndColumn[1]);
-                        System.out.println(q);
-                        To(username, new Message(Message.Action.QUESTION_DATA_RECEIVED, GSON.toJson(q)));
+                        var questionRequest = GSON.fromJson(message.data, AnswerData.class);
+                        Question q = Questions.tryGetQuestion(questionRequest.col, questionRequest.row, questionRequest.username);
 
-                    case REQUEST_QUESTION_COLUMNS:
-                        To(username, new Message(Message.Action.SEND_TO_QUESTION_BOARD, GSON.toJson(new String[]{
-                                "Column1", "Column2", "Column3", "Column4", "Column5", "Column6",
-                    }
-                    )));
+                        if (q == null){
+                            //the question is locked. Simply broadcast the board's current state.
+                            Broadcast(new Message(Message.Action.UPDATE_BOARD, GSON.toJson(BoardData)));
+                            break;
+                        }
+
+                        QuestionData questionData = new QuestionData(q.getColumn(), q.getRow(), q.getQuestion(), q.getAnswers());
+
+                        // Otherwise, send the question to user
+                        To(username, new Message(Message.Action.QUESTION_DATA_RECEIVED, GSON.toJson(questionData)));
+
+                        //Then, set button state to LOCKED since a user is now in the question
+                        BoardData.buttonStates[q.getColumn()][q.getRow()] = middleware.BoardData.ButtonState.LOCKED;
+                        // Update everyone's board
+                        Broadcast(new Message(Message.Action.UPDATE_BOARD, GSON.toJson(BoardData)));
                         break;
+
+                    case SEND_ANSWER_TO_SERVER: // Client to Server, occurs when client wants to attempt a guess at the right answer
+                        //check if the answer is correct, if so award this player points based on the question row.
+                        //update the question to be unlocked if wrong or answered if correct, and broadcast the new board state.
+                        //TODO: the above
+                        var guess = GSON.fromJson(message.data, AnswerData.class);
+                        Question questionToAnswer = Questions.getQuestion(guess.col, guess.row,guess.username);
+
+                        if(questionToAnswer.isAnswerCorrect(guess.username, guess.answer)){
+                            //the right answer
+                            //give the player points
+                            score += (questionToAnswer.getRow()+1)*100;
+                            BoardData.clients = Server.GetClientsData();
+                            BoardData.buttonStates[guess.col][guess.row] = middleware.BoardData.ButtonState.ANSWERED;
+                            Broadcast(new Message(Message.Action.UPDATE_BOARD, GSON.toJson(BoardData)));
+
+                            if (BoardData.IsGameOver())
+                                Broadcast(new Message(Message.Action.GAME_FINISHED, GSON.toJson(BoardData.clients)));
+                        }
+                        else{
+                            //wrong answer
+                            //Unlock the question so others can try it.
+                            BoardData.buttonStates[guess.col][guess.row] = middleware.BoardData.ButtonState.UNLOCKED;
+                            Broadcast(new Message(Message.Action.UPDATE_BOARD, GSON.toJson(BoardData)));
+                        }
+
                     case IGNORE:
                         break;
                 }
@@ -78,7 +111,9 @@ public class ClientConnection implements Runnable {
         }
     }
 
+    // If everything goes wrong let's close down the client correctly and print the stack trace.
     public void Close() {
+        // We need to remove the client from the list of active clients.
         ConnectedClients.remove(this);
         try {
             if (bufferedWriter != null) {
