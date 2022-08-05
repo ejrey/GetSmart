@@ -11,17 +11,20 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.font.TextAttribute;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class Board implements ActionListener {
 
     JFrame mainFrame = new JFrame();
+    JPanel mainPanel = new JPanel();
+    JPanel player = new JPanel();
+    JPanel titlePanel = new JPanel();
+    JPanel usernamePanel = new JPanel();
     JPanel boardPanel = new JPanel(new GridBagLayout());
     ArrayList<JButton> buttons = new ArrayList<>();
     ArrayList<JLabel> username = new ArrayList<>();
-    JPanel mainPanel = new JPanel();
-    JPanel player = new JPanel();
-    JPanel usernamePanel = new JPanel();
 
     public static final Gson GSON = new Gson();
 
@@ -33,27 +36,32 @@ public class Board implements ActionListener {
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         mainFrame.add(mainPanel);
 
-        //Top Panel
-        JPanel titlePanel = new JPanel();
         JLabel title = new JLabel("Players");
         title.setFont(new Font("Verdana", Font.PLAIN, 50));
+        Font font = title.getFont();
+        Map attributes = font.getAttributes();
+        attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+        title.setFont(font.deriveFont(attributes));
         titlePanel.add(title);
         mainPanel.add(titlePanel);
 
         titlePanel.add(usernamePanel, BorderLayout.AFTER_LAST_LINE);
 
-        // ADDING A USERNAME
-        for (ClientData clientsDatum : clientsData) {
-            var usernameText = new JLabel(clientsDatum.username + ":" + clientsDatum.score);
-            usernameText.setFont(new Font("Verdana", Font.PLAIN, 40));
-            usernameText.setBorder(new EmptyBorder(0, 10, 0, 10));
+        for (ClientData clientData : clientsData) {
+            var usernameText = new JLabel(clientData.username + ":" + clientData.score);
+            usernameText.setFont(new Font("Verdana", Font.PLAIN, 25));
+            usernameText.setBorder(new EmptyBorder(0, 12, 0, 12));
             usernamePanel.add(player);
             player.add(usernameText);
             username.add(usernameText);
         }
-        mainPanel.add(usernamePanel);
 
-        //Board Components
+        mainPanel.add(usernamePanel);
+        JSeparator line = new JSeparator(SwingConstants.HORIZONTAL);
+        line.setBackground(Color.BLACK);
+        line.setBorder(new EmptyBorder(10,0,0,0));
+        mainPanel.add(line);
+
         JPanel colOne = new JPanel();
         JPanel colTwo = new JPanel();
         JPanel colThree = new JPanel();
@@ -79,20 +87,16 @@ public class Board implements ActionListener {
     }
 
     private void addColumnToBoardPanel(JPanel column, int columnNumber, String columnName) {
-        // Column Name
-        JLabel columnTitle = new JLabel("" + columnName, SwingConstants.CENTER);
+        JLabel columnTitle = new JLabel(columnName);
         columnTitle.setFont(new Font("Verdana", Font.PLAIN, 20));
-        columnTitle.setHorizontalAlignment(JLabel.CENTER);
         column.add(columnTitle);
 
-        // Assigning buttons onto columns
         int pointValue = 100;
         for (int i = 0; i < 5; i++) {
             JButton buttonQuestion = new JButton("" + pointValue);
             buttonQuestion.setActionCommand(columnNumber + "-" + pointValue);
             pointValue = pointValue + 100;
 
-            // To adjust size of buttons
             buttonQuestion.setFont(new Font("Arial", Font.PLAIN, 70));
             buttonQuestion.setMaximumSize(new Dimension (1280, 720));
             buttonQuestion.setBorder(BorderFactory.createCompoundBorder(
@@ -107,7 +111,7 @@ public class Board implements ActionListener {
         column.setLayout(new BoxLayout(column, BoxLayout.Y_AXIS));
     }
 
-    public void handleButtonCase(BoardData boardData) {
+    public void updateBoardScreenState(BoardData boardData) {
 
         for (int i = 0; i < boardData.getClients().size(); i++)
             username.get(i).setText(boardData.getClients().get(i).username + ":" + boardData.getClients().get(i).score);
@@ -132,9 +136,8 @@ public class Board implements ActionListener {
 
         for (JButton button : buttons) {
             if (button.getActionCommand().equals(buttonChosen)) {
-                Component component = button;
-                component.setBackground(Color.RED);
-                component.setEnabled(false);
+                ((Component) button).setBackground(Color.RED);
+                ((Component) button).setEnabled(false);
             }
         }
     }
@@ -147,9 +150,8 @@ public class Board implements ActionListener {
 
         for (JButton button : buttons) {
             if (button.getActionCommand().equals(buttonChosen)) {
-                Component component = button;
-                component.setBackground(null);
-                component.setEnabled(true);
+                ((Component) button).setBackground(null);
+                ((Component) button).setEnabled(true);
             }
         }
     }
@@ -160,23 +162,20 @@ public class Board implements ActionListener {
 
         String buttonChosen = "" + chosenColumn + "-" + chosenRow;
 
-        for (int i = 0; i < buttons.size(); i++) {
-            if (buttons.get(i).getActionCommand().equals(buttonChosen)) {
-                Component component = buttons.get(i);
-                component.setBackground(Color.DARK_GRAY);
-                component.setEnabled(false);
+        for (JButton button : buttons) {
+            if (button.getActionCommand().equals(buttonChosen)) {
+                ((Component) button).setBackground(Color.DARK_GRAY);
+                ((Component) button).setEnabled(false);
             }
         }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // Starting the indexes
         String buttonPressed = e.getActionCommand();
         int col = Integer.parseInt(String.valueOf(buttonPressed.charAt(0))) - 1;
         int row = Integer.parseInt(String.valueOf(buttonPressed.charAt(2))) - 1;
 
-        int coordinates[] = {col,row};
         AnswerData desiredQuestion = new AnswerData(row, col, Client.Instance.getUsername());
         Client.Instance.SendMessageToServer(new Message(Message.Action.GET_QUESTION, GSON.toJson(desiredQuestion)));
     }

@@ -149,7 +149,7 @@ public class App implements ActionListener {
     }
 
     public static void updateBoardScreen(BoardData boardData) {
-        SwingUtilities.invokeLater(() -> Instance.board.handleButtonCase(boardData));
+        SwingUtilities.invokeLater(() -> Instance.board.updateBoardScreenState(boardData));
     }
 
     public static void UpdateWaitingRoomUserNames(ArrayList<ClientData> clients) {
