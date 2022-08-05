@@ -7,6 +7,7 @@ import middleware.ClientData;
 import middleware.Message;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -43,8 +44,9 @@ public class Board implements ActionListener {
 
         // ADDING A USERNAME
         for (ClientData clientsDatum : clientsData) {
-            var usernameText = new JLabel(clientsDatum.username + ": " + clientsDatum.score);
+            var usernameText = new JLabel(clientsDatum.username + ":" + clientsDatum.score);
             usernameText.setFont(new Font("Verdana", Font.PLAIN, 40));
+            usernameText.setBorder(new EmptyBorder(0, 10, 0, 10));
             usernamePanel.add(player);
             player.add(usernameText);
             username.add(usernameText);
@@ -108,7 +110,7 @@ public class Board implements ActionListener {
     public void handleButtonCase(BoardData boardData) {
 
         for (int i = 0; i < boardData.getClients().size(); i++)
-            username.get(i).setText(boardData.getClients().get(i).username + ": " + boardData.getClients().get(i).score);
+            username.get(i).setText(boardData.getClients().get(i).username + ":" + boardData.getClients().get(i).score);
 
         for(int column=0; column<6; column++) {
             for(int row=0; row<5; row++){
