@@ -5,37 +5,52 @@ import middleware.ClientData;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 
 public class Results {
     JFrame resultsScreen = new JFrame();
 
     public Results(ArrayList<ClientData> clientsData) {
-        clientsData.sort(Comparator.comparing(o -> o.score));
+
+        Collections.sort(clientsData, new Comparator<ClientData>() {
+            public int compare(ClientData s1, ClientData s2) {
+                return s2.score.compareTo(s1.score);
+            }
+        });
+
         resultsScreen.setSize(1280, 720);
 
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         resultsScreen.add(mainPanel);
 
-        JPanel topPanel = new JPanel();
-        mainPanel.add(topPanel);
-        topPanel.setBorder(BorderFactory.createEmptyBorder(50, 50, 25, 50));
-        JLabel winner = new JLabel("Winner!");
         JPanel winnerPanel = new JPanel();
+        winnerPanel.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
+        mainPanel.add(winnerPanel);
+
+
+        JLabel winner = new JLabel("Winner!");
         winnerPanel.add(winner);
+        winnerPanel.setLayout(new GridBagLayout());
         winner.setFont(new Font("Verdana", Font.PLAIN, 100));
-        topPanel.add(winnerPanel);
 
-        JLabel title = new JLabel(clientsData.get(0).username + ": " + clientsData.get(0).score);
         JPanel titlePanel = new JPanel();
-        titlePanel.add(title);
-        title.setFont(new Font("Verdana", Font.PLAIN, 100));
-        topPanel.add(titlePanel);
-
-        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
-        winnerPanel.setLayout(new BoxLayout(winnerPanel, BoxLayout.Y_AXIS));
         titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
+        titlePanel.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
+        mainPanel.add(titlePanel);
+
+        for(int i = 0; i < 3; i++) {
+            if (i < clientsData.toArray().length) {
+                JPanel firstPanel = new JPanel();
+                JLabel first = new JLabel( i + 1 + ". " + clientsData.get(i).username + ": " + clientsData.get(i).score);
+                first.setFont(new Font("Verdana", Font.PLAIN, 25));
+                first.setMaximumSize(new Dimension(250, 25));
+                firstPanel.add(first);
+                firstPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+                titlePanel.add(firstPanel);
+            }
+        }
 
         JPanel botPanel = new JPanel();
         mainPanel.add(botPanel);
