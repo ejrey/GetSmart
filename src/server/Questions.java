@@ -58,8 +58,8 @@ public class Questions {
             }
         }
     }
-    public Question tryGetQuestion(int column, int row, String threadId){
-        return currentQuestions[column][row].tryGetQuestion(threadId);
+    public Question tryGetQuestion(int column, int row, String userName){
+        return currentQuestions[column][row].tryGetQuestion(userName);
     }
     public Question getQuestion(int column, int row, String threadId){
         //Bypasses locking; used to get the question for checking the right answer
