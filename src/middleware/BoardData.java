@@ -24,6 +24,15 @@ public class BoardData {
 
     }
 
+    public boolean IsGameOver() {
+        for(int column=0; column<6; column++)
+            for(int row=0; row<5; row++)
+                if (buttonStates[column][row] != ButtonState.ANSWERED)
+                    return true; // change to false for production.
+
+        return true;
+    }
+
     public ArrayList<ClientData> getClients() {
         return clients;
     }

@@ -83,6 +83,9 @@ public class Client implements Runnable  {
                         // Re-render the jeopardy board and people scores
                         // button status, usernames and score
                         break;
+                    case GAME_FINISHED:
+                        ArrayList<ClientData> clientsData = GSON.fromJson(message.data, new TypeToken<ArrayList<ClientData>>(){}.getType());
+                        App.GoToResults(clientsData);
                     case IGNORE:
                         break;
                 }

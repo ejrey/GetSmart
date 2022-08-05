@@ -90,6 +90,9 @@ public class ClientConnection implements Runnable {
                             BoardData.clients = Server.GetClientsData();
                             BoardData.buttonStates[guess.col][guess.row] = middleware.BoardData.ButtonState.ANSWERED;
                             Broadcast(new Message(Message.Action.UPDATE_BOARD, GSON.toJson(BoardData)));
+
+                            if (BoardData.IsGameOver())
+                                Broadcast(new Message(Message.Action.GAME_FINISHED, GSON.toJson(BoardData.clients)));
                         }
                         else{
                             //wrong answer

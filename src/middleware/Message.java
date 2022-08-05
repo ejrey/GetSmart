@@ -12,6 +12,7 @@ public class Message {
         SEND_ANSWER_TO_SERVER,
         QUESTION_DATA_RECEIVED, // From server to client, client should render question page from body data
         UPDATE_BOARD, // From server to client, client should rerender button states and scores
+        GAME_FINISHED, // ArrayList of ClientData
     }
 
     public Action action;

@@ -1,7 +1,3 @@
-// QuestionPage takes in a string that is a question, a string that is the question number, and then an array of answers
-// Array size should be 4 & and should have only 4 answers.
-// If we want to change the amount of answers then we will need to change some numbers but it's not a huge issue
-
 package client;
 
 import com.google.gson.Gson;

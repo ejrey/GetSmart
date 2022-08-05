@@ -137,6 +137,13 @@ public class App implements ActionListener {
         });
     }
 
+    public static void GoToResults(ArrayList<ClientData> clientsData) {
+        SwingUtilities.invokeLater(() -> {
+            Instance.board.hideBoard();
+            new Results(clientsData);
+        });
+    }
+
     public static void SetBoardInvisible() {
         SwingUtilities.invokeLater(() -> Instance.board.hideBoard());
     }
